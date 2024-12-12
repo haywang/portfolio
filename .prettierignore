@@ -1,0 +1,6 @@
+pnpm-lock.yaml
+.huskyrc
+.husky/*
+.prettierignore
+public/*
+README.md
