@@ -25,9 +25,31 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const basePath = process.env.BASE_PATH || ''
   return (
     <html lang="en">
       <head>
+        <link
+          rel="apple-touch-icon"
+          sizes="76x76"
+          href={`${basePath}/static/favicons/apple-touch-icon.png`}
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href={`${basePath}/static/favicons/favicon-32x32.png`}
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href={`${basePath}/static/favicons/favicon-16x16.png`}
+        />
+        <link
+          rel="manifest"
+          href={`${basePath}/static/favicons/site.webmanifest`}
+        />
         <GA />
       </head>
       <body
