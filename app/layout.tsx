@@ -1,19 +1,8 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import GA from '@/components/GA'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin']
-})
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin']
-})
 
 export const metadata: Metadata = {
   title: 'Portfolio',
@@ -32,29 +21,24 @@ export default function RootLayout({
         <link
           rel="apple-touch-icon"
           sizes="76x76"
-          href={`${basePath}/static/favicons/apple-touch-icon.png`}
+          href={`${basePath}/favicons/apple-touch-icon.png`}
         />
         <link
           rel="icon"
           type="image/png"
           sizes="32x32"
-          href={`${basePath}/static/favicons/favicon-32x32.png`}
+          href={`${basePath}/favicons/favicon-32x32.png`}
         />
         <link
           rel="icon"
           type="image/png"
           sizes="16x16"
-          href={`${basePath}/static/favicons/favicon-16x16.png`}
+          href={`${basePath}/favicons/favicon-16x16.png`}
         />
-        <link
-          rel="manifest"
-          href={`${basePath}/static/favicons/site.webmanifest`}
-        />
+        <link rel="manifest" href={`${basePath}/favicons/site.webmanifest`} />
         <GA />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`antialiased`}>
         <Header />
         {children}
         <Footer />
