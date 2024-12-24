@@ -1,9 +1,10 @@
 export const showcase = [
   {
-    name: 'OpenAI / ChatGPT',
-    slug: 'openai',
-    thumbnail: require('@/images/showcase/thumbnails/openai.com.png').default,
+    name: 'ChatBot',
+    slug: 'ai/chatbot',
+    thumbnail: require('@/images/showcase/thumbnails/chatbot.png').default,
     // video: require('@/videos/openai.com.mp4').default,
-    description: 'Marketing website & chat interface'
+    description:
+      "It's a AI chatbot useing OpenRouter and Google Gemini, meta llama 3.1 70b"
   }
 ]

@@ -48,7 +48,7 @@ export default function Home() {
             </div>
             <div className="mt-6 flex flex-wrap items-center">
               <h2 className="text-sm font-semibold leading-6 text-slate-900 group-hover:text-sky-500 dark:text-white dark:group-hover:text-sky-400">
-                <a href="/showcase/openai">
+                <a href={site.slug}>
                   <span className="absolute inset-0 rounded-3xl"></span>
                   {site.name}
                 </a>
