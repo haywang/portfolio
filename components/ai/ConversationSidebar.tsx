@@ -59,7 +59,17 @@ export function ConversationSidebar({
               <Button
                 variant="ghost"
                 className="flex-1 justify-start gap-2 truncate p-2"
-                onClick={() => onSelect(conversation)}
+                onClick={() => {
+                  onSelect(conversation)
+                  requestAnimationFrame(() => {
+                    const scrollArea = document.querySelector(
+                      '[data-radix-scroll-area-viewport]'
+                    )
+                    if (scrollArea) {
+                      scrollArea.scrollTop = scrollArea.scrollHeight
+                    }
+                  })
+                }}
               >
                 <MessageSquare className="h-4 w-4 shrink-0" />
                 {editingId === conversation.id ? (

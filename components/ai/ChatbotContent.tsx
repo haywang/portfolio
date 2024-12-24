@@ -232,9 +232,28 @@ export default function ChatbotPage() {
 
   useEffect(() => {
     if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
+      const scrollArea = scrollAreaRef.current.querySelector(
+        '[data-radix-scroll-area-viewport]'
+      )
+      if (scrollArea) {
+        scrollArea.scrollTop = scrollArea.scrollHeight
+      }
     }
   }, [currentConversation?.messages])
+
+  useEffect(() => {
+    if (scrollAreaRef.current && currentConversation?.messages?.length) {
+      // Use requestAnimationFrame to ensure DOM is updated
+      requestAnimationFrame(() => {
+        const scrollArea = scrollAreaRef.current?.querySelector(
+          '[data-radix-scroll-area-viewport]'
+        )
+        if (scrollArea) {
+          scrollArea.scrollTop = scrollArea.scrollHeight
+        }
+      })
+    }
+  }, [currentConversation?.id]) // Only trigger when conversation changes
 
   return (
     <div className="flex h-[90vh]">
