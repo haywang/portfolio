@@ -10,12 +10,12 @@ export const models = [
   {
     id: 'google/gemini-2.0-flash-exp:free',
     name: 'Gemini 2.0 Flash',
-    description: 'Google 最新的 Gemini 模型'
+    description: 'Latest Gemini model from Google'
   },
   {
     id: 'meta-llama/llama-3.1-70b-instruct:free',
     name: 'Llama 3 70B',
-    description: 'Meta 的 Llama 3 70B 指令模型'
+    description: "Meta's Llama 3 70B instruction model"
   }
 ]
 
@@ -28,7 +28,7 @@ export function ModelSelector({ value, onChange }: ModelSelectorProps) {
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="选择模型" />
+        <SelectValue placeholder="Select model" />
       </SelectTrigger>
       <SelectContent>
         {models.map((model) => (

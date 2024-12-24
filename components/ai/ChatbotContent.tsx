@@ -48,7 +48,7 @@ export default function ChatbotPage() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || '请求失败')
+        throw new Error(data.error || 'Request failed')
       }
 
       setMessages((prev) => [
@@ -57,8 +57,9 @@ export default function ChatbotPage() {
       ])
     } catch (error) {
       toast({
-        title: '错误',
-        description: error instanceof Error ? error.message : '发送消息失败',
+        title: 'Error',
+        description:
+          error instanceof Error ? error.message : 'Failed to send message',
         variant: 'destructive'
       })
     } finally {
@@ -70,7 +71,7 @@ export default function ChatbotPage() {
       <div className="container mx-auto max-w-4xl p-4">
         <div className="flex h-[90vh] flex-col gap-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold">AI 助手</h1>
+            <h1 className="text-2xl font-bold">AI Chatbot</h1>
             <ModelSelector value={model} onChange={setModel} />
           </div>
 
@@ -94,7 +95,7 @@ export default function ChatbotPage() {
             <Textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="输入消息..."
+              placeholder="Type a message..."
               className="min-h-[60px] flex-1"
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -104,7 +105,7 @@ export default function ChatbotPage() {
               }}
             />
             <Button type="submit" disabled={isLoading}>
-              发送
+              Send
             </Button>
           </form>
         </div>
