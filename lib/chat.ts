@@ -29,14 +29,18 @@ export type Conversation = {
   updatedAt: any
 }
 
-export async function createConversation(userId: string, model: string) {
+export async function createConversation(
+  userId: string,
+  model: string,
+  globalPrompt: string = ''
+) {
   try {
     const newConversation: Omit<Conversation, 'id'> = {
       title: 'New Conversation',
       messages: [],
       userId,
       model,
-      systemPrompt: '',
+      systemPrompt: globalPrompt,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     }

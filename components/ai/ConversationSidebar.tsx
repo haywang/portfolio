@@ -5,6 +5,7 @@ import { Input } from '../ui/input'
 import { Plus, Edit2, Trash2, MessageSquare } from 'lucide-react'
 import type { Conversation } from '@/lib/chat'
 import { cn } from '@/lib/utils'
+import { Textarea } from '../ui/textarea'
 
 interface ConversationSidebarProps {
   conversations: Conversation[]
@@ -13,6 +14,7 @@ interface ConversationSidebarProps {
   onNew: () => void
   onRename: (conversation: Conversation, newTitle: string) => void
   onDelete: (conversation: Conversation) => void
+  onPromptEdit: (conversation: Conversation, newPrompt: string) => void
 }
 
 export function ConversationSidebar({
@@ -21,10 +23,13 @@ export function ConversationSidebar({
   onSelect,
   onNew,
   onRename,
-  onDelete
+  onDelete,
+  onPromptEdit
 }: ConversationSidebarProps) {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingTitle, setEditingTitle] = useState('')
+  const [editingPromptId, setEditingPromptId] = useState<string | null>(null)
+  const [editingPrompt, setEditingPrompt] = useState('')
 
   const handleStartRename = (conversation: Conversation) => {
     setEditingId(conversation.id)
@@ -36,6 +41,18 @@ export function ConversationSidebar({
       onRename(conversation, editingTitle.trim())
     }
     setEditingId(null)
+  }
+
+  const handleStartPromptEdit = (conversation: Conversation) => {
+    setEditingPromptId(conversation.id)
+    setEditingPrompt(conversation.systemPrompt || '')
+  }
+
+  const handlePromptSave = (conversation: Conversation) => {
+    if (editingPrompt !== conversation.systemPrompt) {
+      onPromptEdit(conversation, editingPrompt)
+    }
+    setEditingPromptId(null)
   }
 
   return (
@@ -108,7 +125,35 @@ export function ConversationSidebar({
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
+                <Button
+                  onClick={() => handleStartPromptEdit(conversation)}
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8"
+                >
+                  <MessageSquare className="h-4 w-4" />
+                </Button>
               </div>
+              {editingPromptId === conversation.id && (
+                <div className="absolute left-0 top-0 z-10 w-full bg-background p-2">
+                  <Textarea
+                    value={editingPrompt}
+                    onChange={(e) => setEditingPrompt(e.target.value)}
+                    onBlur={() => handlePromptSave(conversation)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault()
+                        handlePromptSave(conversation)
+                      } else if (e.key === 'Escape') {
+                        setEditingPromptId(null)
+                      }
+                    }}
+                    className="min-h-[100px] w-full"
+                    placeholder="Enter system prompt..."
+                    autoFocus
+                  />
+                </div>
+              )}
             </div>
           ))}
         </div>

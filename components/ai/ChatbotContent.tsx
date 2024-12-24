@@ -67,10 +67,13 @@ export default function ChatbotPage() {
   const handleNewConversation = async () => {
     if (!user) return
     try {
-      const newConversation = await createConversation(user.uid, models[0].id)
+      const newConversation = await createConversation(
+        user.uid,
+        models[0].id,
+        systemPrompt
+      )
       setConversations((prev) => [newConversation, ...prev])
       setCurrentConversation(newConversation)
-      setSystemPrompt('')
     } catch (error) {
       toast({
         title: 'Error',
@@ -124,6 +127,34 @@ export default function ChatbotPage() {
     }
   }
 
+  const handlePromptUpdate = async (
+    conversation: Conversation,
+    newPrompt: string
+  ) => {
+    try {
+      await updateConversation(conversation.id!, { systemPrompt: newPrompt })
+      setConversations((prev) =>
+        prev.map((conv) =>
+          conv.id === conversation.id
+            ? { ...conv, systemPrompt: newPrompt }
+            : conv
+        )
+      )
+      if (currentConversation?.id === conversation.id) {
+        setCurrentConversation({
+          ...currentConversation,
+          systemPrompt: newPrompt
+        })
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to update system prompt',
+        variant: 'destructive'
+      })
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!input.trim() || isLoading || !user || !currentConversation) return
@@ -136,13 +167,16 @@ export default function ChatbotPage() {
 
     const messages = [...(currentConversation.messages || [])]
 
-    // Add system prompt if it exists and there are no messages yet
-    if (systemPrompt && messages.length === 0) {
-      messages.push({
-        role: 'system',
-        content: systemPrompt,
-        timestamp: new Date().toISOString()
-      })
+    // Use conversation-specific prompt if it exists, otherwise use global prompt
+    if (messages.length === 0) {
+      const promptToUse = currentConversation.systemPrompt || systemPrompt
+      if (promptToUse) {
+        messages.push({
+          role: 'system',
+          content: promptToUse,
+          timestamp: new Date().toISOString()
+        })
+      }
     }
 
     messages.push(userMessage)
@@ -264,6 +298,9 @@ export default function ChatbotPage() {
         onNew={handleNewConversation}
         onRename={handleRenameConversation}
         onDelete={handleDeleteConversation}
+        onPromptEdit={(conversation, newPrompt) => {
+          handlePromptUpdate(conversation, newPrompt)
+        }}
       />
       <div className="flex flex-1 flex-col gap-4 p-4">
         <div className="flex items-center justify-between">
@@ -300,8 +337,17 @@ export default function ChatbotPage() {
                     <Label htmlFor="systemPrompt">System Prompt</Label>
                     <Textarea
                       id="systemPrompt"
-                      value={systemPrompt}
-                      onChange={(e) => setSystemPrompt(e.target.value)}
+                      value={currentConversation?.systemPrompt || systemPrompt}
+                      onChange={(e) => {
+                        if (currentConversation) {
+                          setCurrentConversation({
+                            ...currentConversation,
+                            systemPrompt: e.target.value
+                          })
+                        } else {
+                          setSystemPrompt(e.target.value)
+                        }
+                      }}
                       placeholder="Enter a system prompt to guide the conversation..."
                       className="h-32"
                     />
