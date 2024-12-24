@@ -1,17 +1,15 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { Button } from '../ui/button'
+import { Textarea } from '../ui/textarea'
+import { ScrollArea } from '../ui/scroll-area'
 import { useToast } from '@/hooks/use-toast'
 import { Loader2 } from 'lucide-react'
-import { ChatMessage } from './chat-message'
-import { ModelSelector, models } from './model-selector'
-import { Toaster } from '@/components/ui/toaster'
+import { ChatMessage } from './ChatMessage'
+import { ModelSelector, models } from './ModelSelector'
+import { Toaster } from '../ui/toaster'
 
-// Copy all the content from the current chatbot/page.tsx
-// Reference the existing chatbot page content:
 export default function ChatbotPage() {
   const [messages, setMessages] = useState<
     Array<{ role: 'user' | 'assistant'; content: string }>
