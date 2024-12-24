@@ -6,8 +6,9 @@ import {
   User,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
   signOut
-} from 'firebase/auth'
+} from '@firebase/auth'
 
 interface AuthContextType {
   user: User | null
@@ -39,9 +40,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider()
     try {
-      await signInWithPopup(auth, provider)
+      // Configure custom parameters
+      provider.setCustomParameters({
+        prompt: 'select_account'
+      })
+
+      // Clear any existing popup sessions
+      await signOut(auth)
+
+      // Sign in with popup
+      const result = await signInWithPopup(auth, provider)
+      return result.user
     } catch (error) {
-      console.error('Error signing in with Google:', error)
+      if (error.code === 'auth/cancelled-popup-request') {
+        console.log('Popup was closed by user')
+      } else if (error.code === 'auth/popup-blocked') {
+        // If popup is blocked, try redirect method instead
+        const provider = new GoogleAuthProvider()
+        await signInWithRedirect(auth, provider)
+      } else {
+        console.error('Error signing in with Google:', error)
+      }
+      throw error
     }
   }
 
