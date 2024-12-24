@@ -5,36 +5,153 @@ import { Button } from '../ui/button'
 import { Textarea } from '../ui/textarea'
 import { ScrollArea } from '../ui/scroll-area'
 import { useToast } from '@/hooks/use-toast'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Settings } from 'lucide-react'
 import { ChatMessage } from './ChatMessage'
 import { ModelSelector, models } from './ModelSelector'
 import { Toaster } from '../ui/toaster'
-
-type Message = {
-  role: 'user' | 'assistant'
-  content: string
-}
+import { useAuth } from '@/contexts/AuthContext'
+import {
+  createConversation,
+  updateConversation,
+  deleteConversation,
+  getConversations,
+  type Message,
+  type Conversation
+} from '@/lib/chat'
+import { ConversationSidebar } from './ConversationSidebar'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '../ui/dialog'
+import { Input } from '../ui/input'
+import { Label } from '../ui/label'
 
 export default function ChatbotPage() {
-  const [messages, setMessages] = useState<Message[]>([])
+  const [conversations, setConversations] = useState<Conversation[]>([])
+  const [currentConversation, setCurrentConversation] =
+    useState<Conversation | null>(null)
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [model, setModel] = useState(models[0].id)
+  const [systemPrompt, setSystemPrompt] = useState('')
   const scrollAreaRef = useRef<HTMLDivElement>(null)
   const { toast } = useToast()
+  const { user } = useAuth()
 
+  // Load conversations when component mounts
   useEffect(() => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
+    async function loadConversations() {
+      if (user) {
+        try {
+          const loadedConversations = await getConversations(user.uid)
+          setConversations(loadedConversations)
+          if (loadedConversations.length > 0) {
+            setCurrentConversation(loadedConversations[0])
+            setSystemPrompt(loadedConversations[0].systemPrompt || '')
+          }
+        } catch (error) {
+          console.error('Error loading conversations:', error)
+          toast({
+            title: 'Error',
+            description: 'Failed to load conversation history',
+            variant: 'destructive'
+          })
+        }
+      }
     }
-  }, [messages])
+    loadConversations()
+  }, [user, toast])
+
+  const handleNewConversation = async () => {
+    if (!user) return
+    try {
+      const newConversation = await createConversation(user.uid, models[0].id)
+      setConversations((prev) => [newConversation, ...prev])
+      setCurrentConversation(newConversation)
+      setSystemPrompt('')
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to create new conversation',
+        variant: 'destructive'
+      })
+    }
+  }
+
+  const handleRenameConversation = async (
+    conversation: Conversation,
+    newTitle: string
+  ) => {
+    try {
+      await updateConversation(conversation.id!, { title: newTitle })
+      setConversations((prev) =>
+        prev.map((conv) =>
+          conv.id === conversation.id ? { ...conv, title: newTitle } : conv
+        )
+      )
+      if (currentConversation?.id === conversation.id) {
+        setCurrentConversation({ ...currentConversation, title: newTitle })
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to rename conversation',
+        variant: 'destructive'
+      })
+    }
+  }
+
+  const handleDeleteConversation = async (conversation: Conversation) => {
+    try {
+      await deleteConversation(conversation.id!)
+      setConversations((prev) =>
+        prev.filter((conv) => conv.id !== conversation.id)
+      )
+      if (currentConversation?.id === conversation.id) {
+        const remaining = conversations.filter(
+          (conv) => conv.id !== conversation.id
+        )
+        setCurrentConversation(remaining.length > 0 ? remaining[0] : null)
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to delete conversation',
+        variant: 'destructive'
+      })
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!input.trim() || isLoading) return
+    if (!input.trim() || isLoading || !user || !currentConversation) return
 
-    const userMessage: Message = { role: 'user', content: input }
-    setMessages((prev) => [...prev, userMessage])
+    const userMessage: Message = {
+      role: 'user',
+      content: input,
+      timestamp: new Date().toISOString()
+    }
+
+    const messages = [...(currentConversation.messages || [])]
+
+    // Add system prompt if it exists and there are no messages yet
+    if (systemPrompt && messages.length === 0) {
+      messages.push({
+        role: 'system',
+        content: systemPrompt,
+        timestamp: new Date().toISOString()
+      })
+    }
+
+    messages.push(userMessage)
+
+    // Update conversation immediately for optimistic UI
+    setCurrentConversation({
+      ...currentConversation,
+      messages
+    })
     setInput('')
     setIsLoading(true)
 
@@ -43,8 +160,8 @@ export default function ChatbotPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: [...messages, userMessage],
-          model: model
+          messages,
+          model: currentConversation.model
         })
       })
 
@@ -54,10 +171,28 @@ export default function ChatbotPage() {
         throw new Error(data.error || 'Request failed')
       }
 
-      setMessages((prev) => [
-        ...prev,
-        { role: 'assistant', content: data.message }
-      ])
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: data.message,
+        timestamp: new Date().toISOString()
+      }
+
+      const updatedMessages = [...messages, assistantMessage]
+      const updatedConversation = {
+        ...currentConversation,
+        messages: updatedMessages
+      }
+
+      // Update conversation in state and Firestore
+      setCurrentConversation(updatedConversation)
+      setConversations((prev) =>
+        prev.map((conv) =>
+          conv.id === currentConversation.id ? updatedConversation : conv
+        )
+      )
+      await updateConversation(currentConversation.id!, {
+        messages: updatedMessages
+      })
     } catch (error) {
       toast({
         title: 'Error',
@@ -65,55 +200,135 @@ export default function ChatbotPage() {
           error instanceof Error ? error.message : 'Failed to send message',
         variant: 'destructive'
       })
+      // Revert optimistic update
+      setCurrentConversation({ ...currentConversation })
     } finally {
       setIsLoading(false)
     }
   }
+
+  const handleSystemPromptChange = async () => {
+    if (!currentConversation) return
+    try {
+      await updateConversation(currentConversation.id!, {
+        systemPrompt
+      })
+      setCurrentConversation({
+        ...currentConversation,
+        systemPrompt
+      })
+      toast({
+        title: 'Success',
+        description: 'System prompt updated successfully'
+      })
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to update system prompt',
+        variant: 'destructive'
+      })
+    }
+  }
+
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
+    }
+  }, [currentConversation?.messages])
+
   return (
-    <>
-      <div className="container mx-auto max-w-4xl p-4">
-        <div className="flex h-[90vh] flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold">AI Chatbot</h1>
-            <ModelSelector value={model} onChange={setModel} />
-          </div>
-
-          <ScrollArea
-            ref={scrollAreaRef}
-            className="flex-1 rounded-lg border p-4"
-          >
-            <div className="space-y-4">
-              {messages.map((message, i) => (
-                <ChatMessage key={i} message={message} />
-              ))}
-              {isLoading && (
-                <div className="flex justify-center">
-                  <Loader2 className="h-6 w-6 animate-spin" />
-                </div>
-              )}
-            </div>
-          </ScrollArea>
-
-          <form onSubmit={handleSubmit} className="flex gap-2">
-            <Textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type a message..."
-              className="min-h-[60px] flex-1"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault()
-                  handleSubmit(e)
+    <div className="flex h-[90vh]">
+      <ConversationSidebar
+        conversations={conversations}
+        currentConversation={currentConversation || undefined}
+        onSelect={setCurrentConversation}
+        onNew={handleNewConversation}
+        onRename={handleRenameConversation}
+        onDelete={handleDeleteConversation}
+      />
+      <div className="flex flex-1 flex-col gap-4 p-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">
+            {currentConversation?.title || 'New Chat'}
+          </h1>
+          <div className="flex items-center gap-2">
+            <ModelSelector
+              value={currentConversation?.model || models[0].id}
+              onChange={(newModel) => {
+                if (currentConversation) {
+                  updateConversation(currentConversation.id!, {
+                    model: newModel
+                  })
+                  setCurrentConversation({
+                    ...currentConversation,
+                    model: newModel
+                  })
                 }
               }}
             />
-            <Button type="submit" disabled={isLoading}>
-              Send
-            </Button>
-          </form>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Settings className="h-4 w-4" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Chat Settings</DialogTitle>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="systemPrompt">System Prompt</Label>
+                    <Textarea
+                      id="systemPrompt"
+                      value={systemPrompt}
+                      onChange={(e) => setSystemPrompt(e.target.value)}
+                      placeholder="Enter a system prompt to guide the conversation..."
+                      className="h-32"
+                    />
+                    <Button onClick={handleSystemPromptChange}>Save</Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
+
+        <ScrollArea
+          ref={scrollAreaRef}
+          className="flex-1 rounded-lg border p-4"
+        >
+          <div className="space-y-4">
+            {currentConversation?.messages.map((message, i) => (
+              <ChatMessage key={i} message={message} />
+            ))}
+            {isLoading && (
+              <div className="flex justify-center">
+                <Loader2 className="h-6 w-6 animate-spin" />
+              </div>
+            )}
+          </div>
+        </ScrollArea>
+
+        <form onSubmit={handleSubmit} className="flex gap-2">
+          <Textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type a message..."
+            className="min-h-[60px] flex-1"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault()
+                handleSubmit(e)
+              }
+            }}
+          />
+          <Button type="submit" disabled={isLoading || !currentConversation}>
+            Send
+          </Button>
+        </form>
       </div>
       <Toaster />
-    </>
+    </div>
   )
 }

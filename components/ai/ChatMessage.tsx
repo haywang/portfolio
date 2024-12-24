@@ -1,13 +1,13 @@
 import { cn } from '@/lib/utils'
+import type { Message } from '@/lib/chat'
 
 interface ChatMessageProps {
-  message: {
-    role: 'user' | 'assistant'
-    content: string
-  }
+  message: Message
 }
 
 export function ChatMessage({ message }: ChatMessageProps) {
+  if (message.role === 'system') return null // Hide system messages
+
   return (
     <div
       className={cn(
