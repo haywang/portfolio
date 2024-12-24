@@ -88,14 +88,17 @@ export default function ChatbotPage() {
     newTitle: string
   ) => {
     try {
-      await updateConversation(conversation.id!, { title: newTitle })
+      await updateConversation(conversation.id, { title: newTitle })
       setConversations((prev) =>
         prev.map((conv) =>
           conv.id === conversation.id ? { ...conv, title: newTitle } : conv
         )
       )
       if (currentConversation?.id === conversation.id) {
-        setCurrentConversation({ ...currentConversation, title: newTitle })
+        setCurrentConversation({
+          ...currentConversation,
+          title: newTitle
+        })
       }
     } catch (error) {
       toast({
@@ -108,7 +111,7 @@ export default function ChatbotPage() {
 
   const handleDeleteConversation = async (conversation: Conversation) => {
     try {
-      await deleteConversation(conversation.id!)
+      await deleteConversation(conversation.id)
       setConversations((prev) =>
         prev.filter((conv) => conv.id !== conversation.id)
       )
@@ -165,18 +168,15 @@ export default function ChatbotPage() {
       timestamp: new Date().toISOString()
     }
 
-    const messages = [...(currentConversation.messages || [])]
+    const messages = [...currentConversation.messages]
 
-    // Use conversation-specific prompt if it exists, otherwise use global prompt
-    if (messages.length === 0) {
-      const promptToUse = currentConversation.systemPrompt || systemPrompt
-      if (promptToUse) {
-        messages.push({
-          role: 'system',
-          content: promptToUse,
-          timestamp: new Date().toISOString()
-        })
-      }
+    // Add system prompt if it exists and there are no messages yet
+    if (systemPrompt && messages.length === 0) {
+      messages.push({
+        role: 'system',
+        content: systemPrompt,
+        timestamp: new Date().toISOString()
+      })
     }
 
     messages.push(userMessage)
@@ -224,7 +224,7 @@ export default function ChatbotPage() {
           conv.id === currentConversation.id ? updatedConversation : conv
         )
       )
-      await updateConversation(currentConversation.id!, {
+      await updateConversation(currentConversation.id, {
         messages: updatedMessages
       })
     } catch (error) {
@@ -235,7 +235,7 @@ export default function ChatbotPage() {
         variant: 'destructive'
       })
       // Revert optimistic update
-      setCurrentConversation({ ...currentConversation })
+      setCurrentConversation(currentConversation)
     } finally {
       setIsLoading(false)
     }
@@ -244,7 +244,7 @@ export default function ChatbotPage() {
   const handleSystemPromptChange = async () => {
     if (!currentConversation) return
     try {
-      await updateConversation(currentConversation.id!, {
+      await updateConversation(currentConversation.id, {
         systemPrompt
       })
       setCurrentConversation({

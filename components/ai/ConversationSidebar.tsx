@@ -32,6 +32,7 @@ export function ConversationSidebar({
   const [editingPrompt, setEditingPrompt] = useState('')
 
   const handleStartRename = (conversation: Conversation) => {
+    if (!conversation.id) return
     setEditingId(conversation.id)
     setEditingTitle(conversation.title)
   }
@@ -44,6 +45,7 @@ export function ConversationSidebar({
   }
 
   const handleStartPromptEdit = (conversation: Conversation) => {
+    if (!conversation.id) return
     setEditingPromptId(conversation.id)
     setEditingPrompt(conversation.systemPrompt || '')
   }

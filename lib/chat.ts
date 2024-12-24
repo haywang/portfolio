@@ -9,7 +9,8 @@ import {
   serverTimestamp,
   doc,
   updateDoc,
-  deleteDoc
+  deleteDoc,
+  type Timestamp
 } from 'firebase/firestore'
 
 export type Message = {
@@ -18,15 +19,18 @@ export type Message = {
   timestamp?: string
 }
 
-export type Conversation = {
-  id?: string
+export type ConversationData = {
   title: string
   messages: Message[]
   userId: string
   model: string
   systemPrompt?: string
-  createdAt: any
-  updatedAt: any
+  createdAt: Timestamp
+  updatedAt: Timestamp
+}
+
+export type Conversation = ConversationData & {
+  id: string
 }
 
 export async function createConversation(
@@ -35,14 +39,14 @@ export async function createConversation(
   globalPrompt: string = ''
 ) {
   try {
-    const newConversation: Omit<Conversation, 'id'> = {
+    const newConversation: ConversationData = {
       title: 'New Conversation',
       messages: [],
       userId,
       model,
       systemPrompt: globalPrompt,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp()
+      createdAt: serverTimestamp() as Timestamp,
+      updatedAt: serverTimestamp() as Timestamp
     }
 
     const docRef = await addDoc(
@@ -58,7 +62,7 @@ export async function createConversation(
 
 export async function updateConversation(
   conversationId: string,
-  updates: Partial<Conversation>
+  updates: Partial<ConversationData>
 ) {
   try {
     const conversationRef = doc(db, 'conversations', conversationId)
@@ -90,10 +94,14 @@ export async function getConversations(userId: string) {
     )
 
     const querySnapshot = await getDocs(simpleQuery)
-    const conversations = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data()
-    })) as Conversation[]
+    const conversations = querySnapshot.docs.map((doc) => {
+      const data = doc.data() as ConversationData
+      return {
+        ...data,
+        id: doc.id,
+        messages: data.messages || []
+      } as Conversation
+    })
 
     return conversations
   } catch (error) {
