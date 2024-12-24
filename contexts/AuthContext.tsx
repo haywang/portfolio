@@ -6,9 +6,9 @@ import {
   User,
   GoogleAuthProvider,
   signInWithPopup,
-  signInWithRedirect,
   signOut
-} from '@firebase/auth'
+} from 'firebase/auth'
+import { FirebaseError } from 'firebase/app'
 
 interface AuthContextType {
   user: User | null
@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => unsubscribe()
   }, [])
 
-  const signInWithGoogle = async () => {
+  const signInWithGoogle = async (): Promise<void> => {
     const provider = new GoogleAuthProvider()
     try {
       // Configure custom parameters
@@ -49,17 +49,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await signOut(auth)
 
       // Sign in with popup
-      const result = await signInWithPopup(auth, provider)
-      return result.user
+      await signInWithPopup(auth, provider)
     } catch (error) {
-      if (error.code === 'auth/cancelled-popup-request') {
-        console.log('Popup was closed by user')
-      } else if (error.code === 'auth/popup-blocked') {
-        // If popup is blocked, try redirect method instead
-        const provider = new GoogleAuthProvider()
-        await signInWithRedirect(auth, provider)
-      } else {
-        console.error('Error signing in with Google:', error)
+      if (error instanceof FirebaseError) {
+        if (error.code === 'auth/cancelled-popup-request') {
+          console.log('Popup was closed by user')
+        } else if (error.code === 'auth/popup-blocked') {
+          // If popup is blocked, try redirect method instead
+        }
       }
       throw error
     }

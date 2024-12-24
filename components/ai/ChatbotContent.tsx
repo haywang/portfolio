@@ -10,10 +10,13 @@ import { ChatMessage } from './ChatMessage'
 import { ModelSelector, models } from './ModelSelector'
 import { Toaster } from '../ui/toaster'
 
+type Message = {
+  role: 'user' | 'assistant'
+  content: string
+}
+
 export default function ChatbotPage() {
-  const [messages, setMessages] = useState<
-    Array<{ role: 'user' | 'assistant'; content: string }>
-  >([])
+  const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [model, setModel] = useState(models[0].id)
@@ -30,7 +33,7 @@ export default function ChatbotPage() {
     e.preventDefault()
     if (!input.trim() || isLoading) return
 
-    const userMessage = { role: 'user', content: input }
+    const userMessage: Message = { role: 'user', content: input }
     setMessages((prev) => [...prev, userMessage])
     setInput('')
     setIsLoading(true)

@@ -10,7 +10,6 @@
     "prettier": "prettier --write ."
   },
   "dependencies": {
-    "@firebase/auth": "^1.8.1",
     "@radix-ui/react-dialog": "^1.1.4",
     "@radix-ui/react-navigation-menu": "^1.2.1",
     "@radix-ui/react-popover": "^1.1.4",
@@ -31,7 +30,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@types/node": "^20",
+    "@types/node": "^20.17.9",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

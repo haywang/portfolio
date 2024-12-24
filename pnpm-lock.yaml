@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@firebase/auth':
-        specifier: ^1.8.1
-        version: 1.8.1(@firebase/app@0.10.17)
       '@radix-ui/react-dialog':
         specifier: ^1.1.4
         version: 1.1.4(@types/react-dom@19.0.2(@types/react@19.0.1))(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -67,7 +64,7 @@ importers:
         specifier: ^3
         version: 3.2.0
       '@types/node':
-        specifier: ^20
+        specifier: ^20.17.9
         version: 20.17.9
       '@types/react':
         specifier: ^19
