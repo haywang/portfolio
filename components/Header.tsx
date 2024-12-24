@@ -17,7 +17,7 @@ export default function Header() {
 
   return (
     <>
-      <div className="supports-backdrop-blur:bg-white/60 sticky top-0 z-40 w-full flex-none bg-white/95 backdrop-blur transition-colors duration-500 dark:border-slate-50/[0.06] dark:bg-transparent lg:z-50 lg:border-b lg:border-slate-900/10">
+      <div className="w-full flex-none bg-white/95 backdrop-blur transition-colors duration-500 dark:border-slate-50/[0.06] dark:bg-transparent lg:border-b lg:border-slate-900/10">
         <div className="max-w-8xl mx-auto">
           <div className="border-b border-slate-900/10 px-8 py-4 dark:border-slate-300/10 lg:border-0 lg:px-8">
             <div className="relative flex items-center">
