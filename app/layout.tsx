@@ -3,6 +3,7 @@ import './globals.css'
 import GA from '@/components/GA'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import { AuthProvider } from '@/contexts/AuthContext'
 
 export const metadata: Metadata = {
   title: 'Portfolio',
@@ -39,9 +40,11 @@ export default function RootLayout({
         <GA />
       </head>
       <body className={`antialiased`}>
-        <Header />
-        {children}
-        <Footer />
+        <AuthProvider>
+          <Header />
+          {children}
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   )

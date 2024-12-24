@@ -10,6 +10,7 @@
     "prettier": "prettier --write ."
   },
   "dependencies": {
+    "@firebase/auth": "^1.8.1",
     "@radix-ui/react-dialog": "^1.1.4",
     "@radix-ui/react-navigation-menu": "^1.2.1",
     "@radix-ui/react-popover": "^1.1.4",
@@ -20,6 +21,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
+    "firebase": "^11.1.0",
     "lucide-react": "^0.468.0",
     "next": "15.1.0",
     "react": "^19.0.0",
