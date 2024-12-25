@@ -6,6 +6,14 @@ import { Plus, Edit2, Trash2, MessageSquare } from 'lucide-react'
 import type { Conversation } from '@/lib/chat'
 import { cn } from '@/lib/utils'
 import { Textarea } from '../ui/textarea'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from '../ui/dialog'
 
 interface ConversationSidebarProps {
   conversations: Conversation[]
@@ -30,6 +38,7 @@ export function ConversationSidebar({
   const [editingTitle, setEditingTitle] = useState('')
   const [editingPromptId, setEditingPromptId] = useState<string | null>(null)
   const [editingPrompt, setEditingPrompt] = useState('')
+  const [deleteDialog, setDeleteDialog] = useState<Conversation | null>(null)
 
   const handleStartRename = (conversation: Conversation) => {
     if (!conversation.id) return
@@ -120,7 +129,7 @@ export function ConversationSidebar({
                   <Edit2 className="h-4 w-4" />
                 </Button>
                 <Button
-                  onClick={() => onDelete(conversation)}
+                  onClick={() => setDeleteDialog(conversation)}
                   size="icon"
                   variant="ghost"
                   className="h-8 w-8"
@@ -160,6 +169,34 @@ export function ConversationSidebar({
           ))}
         </div>
       </ScrollArea>
+
+      <Dialog open={!!deleteDialog} onOpenChange={() => setDeleteDialog(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Conversation</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete &ldquo;{deleteDialog?.title}
+              &rdquo;? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="ghost" onClick={() => setDeleteDialog(null)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                if (deleteDialog) {
+                  onDelete(deleteDialog)
+                  setDeleteDialog(null)
+                }
+              }}
+            >
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
