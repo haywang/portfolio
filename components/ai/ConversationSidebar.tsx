@@ -6,6 +6,7 @@ import { Plus, Edit2, Trash2, MessageSquare } from 'lucide-react'
 import type { Conversation } from '@/lib/chat'
 import { cn } from '@/lib/utils'
 import { Textarea } from '../ui/textarea'
+import { format, isThisWeek, isThisMonth, isThisYear } from 'date-fns'
 import {
   Dialog,
   DialogContent,
@@ -14,6 +15,41 @@ import {
   DialogHeader,
   DialogTitle
 } from '../ui/dialog'
+
+interface GroupedConversations {
+  recent: Conversation[]
+  thisMonth: Conversation[]
+  thisYear: Conversation[]
+  older: Conversation[]
+}
+
+function groupConversationsByDate(
+  conversations: Conversation[]
+): GroupedConversations {
+  return conversations.reduce(
+    (groups, conversation) => {
+      const date = conversation.createdAt?.toDate() || new Date()
+
+      if (isThisWeek(date)) {
+        groups.recent.push(conversation)
+      } else if (isThisMonth(date)) {
+        groups.thisMonth.push(conversation)
+      } else if (isThisYear(date)) {
+        groups.thisYear.push(conversation)
+      } else {
+        groups.older.push(conversation)
+      }
+
+      return groups
+    },
+    {
+      recent: [],
+      thisMonth: [],
+      thisYear: [],
+      older: []
+    } as GroupedConversations
+  )
+}
 
 interface ConversationSidebarProps {
   conversations: Conversation[]
@@ -39,6 +75,37 @@ export function ConversationSidebar({
   const [editingPromptId, setEditingPromptId] = useState<string | null>(null)
   const [editingPrompt, setEditingPrompt] = useState('')
   const [deleteDialog, setDeleteDialog] = useState<Conversation | null>(null)
+
+  const groupedConversations = groupConversationsByDate(conversations)
+
+  const renderConversationGroup = (
+    conversations: Conversation[],
+    title: string
+  ) => {
+    if (conversations.length === 0) return null
+
+    return (
+      <div className="pt-4">
+        <div className="text-sm text-gray-500">{title}</div>
+        {conversations.map((conversation) => (
+          <ConversationItem
+            key={conversation.id}
+            conversation={conversation}
+            isActive={currentConversation?.id === conversation.id}
+            onSelect={onSelect}
+            onRename={handleStartRename}
+            onDelete={setDeleteDialog}
+            onPromptEdit={handleStartPromptEdit}
+            isEditing={editingId === conversation.id}
+            editingTitle={editingTitle}
+            setEditingTitle={setEditingTitle}
+            handleRename={handleRename}
+            setEditingId={setEditingId}
+          />
+        ))}
+      </div>
+    )
+  }
 
   const handleStartRename = (conversation: Conversation) => {
     if (!conversation.id) return
@@ -76,97 +143,19 @@ export function ConversationSidebar({
       </div>
       <ScrollArea className="flex-1">
         <div className="space-y-2 p-2">
-          {conversations.map((conversation) => (
-            <div
-              key={conversation.id}
-              className={cn(
-                'group flex items-center gap-2 rounded-lg p-2 hover:bg-muted',
-                currentConversation?.id === conversation.id && 'bg-muted'
-              )}
-            >
-              <Button
-                variant="ghost"
-                className="flex-1 justify-start gap-2 truncate p-2"
-                onClick={() => {
-                  onSelect(conversation)
-                  requestAnimationFrame(() => {
-                    const scrollArea = document.querySelector(
-                      '[data-radix-scroll-area-viewport]'
-                    )
-                    if (scrollArea) {
-                      scrollArea.scrollTop = scrollArea.scrollHeight
-                    }
-                  })
-                }}
-              >
-                <MessageSquare className="h-4 w-4 shrink-0" />
-                {editingId === conversation.id ? (
-                  <Input
-                    value={editingTitle}
-                    onChange={(e) => setEditingTitle(e.target.value)}
-                    onBlur={() => handleRename(conversation)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        handleRename(conversation)
-                      } else if (e.key === 'Escape') {
-                        setEditingId(null)
-                      }
-                    }}
-                    className="h-6 px-1"
-                    autoFocus
-                  />
-                ) : (
-                  <span className="truncate">{conversation.title}</span>
-                )}
-              </Button>
-              <div className="hidden space-x-1 group-hover:flex">
-                <Button
-                  onClick={() => handleStartRename(conversation)}
-                  size="icon"
-                  variant="ghost"
-                  className="h-8 w-8"
-                >
-                  <Edit2 className="h-4 w-4" />
-                </Button>
-                <Button
-                  onClick={() => setDeleteDialog(conversation)}
-                  size="icon"
-                  variant="ghost"
-                  className="h-8 w-8"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-                <Button
-                  onClick={() => handleStartPromptEdit(conversation)}
-                  size="icon"
-                  variant="ghost"
-                  className="h-8 w-8"
-                >
-                  <MessageSquare className="h-4 w-4" />
-                </Button>
-              </div>
-              {editingPromptId === conversation.id && (
-                <div className="absolute left-0 top-0 z-10 w-full bg-background p-2">
-                  <Textarea
-                    value={editingPrompt}
-                    onChange={(e) => setEditingPrompt(e.target.value)}
-                    onBlur={() => handlePromptSave(conversation)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault()
-                        handlePromptSave(conversation)
-                      } else if (e.key === 'Escape') {
-                        setEditingPromptId(null)
-                      }
-                    }}
-                    className="min-h-[100px] w-full"
-                    placeholder="Enter system prompt..."
-                    autoFocus
-                  />
-                </div>
-              )}
-            </div>
-          ))}
+          {renderConversationGroup(
+            groupedConversations.recent,
+            'Previous 7 Days'
+          )}
+          {renderConversationGroup(
+            groupedConversations.thisMonth,
+            format(new Date(), 'MMMM')
+          )}
+          {renderConversationGroup(
+            groupedConversations.thisYear,
+            format(new Date(), 'yyyy')
+          )}
+          {renderConversationGroup(groupedConversations.older, 'Older')}
         </div>
       </ScrollArea>
 
@@ -197,6 +186,93 @@ export function ConversationSidebar({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
+  )
+}
+
+function ConversationItem({
+  conversation,
+  isActive,
+  onSelect,
+  onRename,
+  onDelete,
+  onPromptEdit,
+  isEditing,
+  editingTitle,
+  setEditingTitle,
+  handleRename,
+  setEditingId
+}: {
+  conversation: Conversation
+  isActive: boolean
+  onSelect: (conversation: Conversation) => void
+  onRename: (conversation: Conversation) => void
+  onDelete: (conversation: Conversation) => void
+  onPromptEdit: (conversation: Conversation) => void
+  isEditing: boolean
+  editingTitle: string
+  setEditingTitle: (title: string) => void
+  handleRename: (conversation: Conversation) => void
+  setEditingId: (id: string | null) => void
+}) {
+  return (
+    <div
+      className={cn(
+        'group flex items-center gap-2 rounded-lg p-2 hover:bg-muted',
+        isActive && 'bg-muted'
+      )}
+    >
+      <Button
+        variant="ghost"
+        className="flex-1 justify-start gap-2 truncate p-2"
+        onClick={() => onSelect(conversation)}
+      >
+        <MessageSquare className="h-4 w-4 shrink-0" />
+        {isEditing ? (
+          <Input
+            value={editingTitle}
+            onChange={(e) => setEditingTitle(e.target.value)}
+            onBlur={() => handleRename(conversation)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleRename(conversation)
+              } else if (e.key === 'Escape') {
+                setEditingId(null)
+              }
+            }}
+            className="h-6 px-1"
+            autoFocus
+          />
+        ) : (
+          <span className="truncate">{conversation.title}</span>
+        )}
+      </Button>
+      <div className="hidden space-x-1 group-hover:flex">
+        <Button
+          onClick={() => onRename(conversation)}
+          size="icon"
+          variant="ghost"
+          className="h-8 w-8"
+        >
+          <Edit2 className="h-4 w-4" />
+        </Button>
+        <Button
+          onClick={() => onDelete(conversation)}
+          size="icon"
+          variant="ghost"
+          className="h-8 w-8"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+        <Button
+          onClick={() => onPromptEdit(conversation)}
+          size="icon"
+          variant="ghost"
+          className="h-8 w-8"
+        >
+          <MessageSquare className="h-4 w-4" />
+        </Button>
+      </div>
     </div>
   )
 }
