@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Menu,
   Search,
@@ -10,19 +12,32 @@ import {
   Copy,
   MoreHorizontal,
   ArrowDown,
-  HelpCircle
+  HelpCircle,
+  Edit2
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ModelSelector, models } from '@/components/ai/ModelSelector'
+import { useState } from 'react'
 
 export default function ChatInterface() {
+  const [selectedModel, setSelectedModel] = useState(models[0].id)
+
   return (
-    <div className="flex h-screen bg-white">
+    <div className="flex h-screen overflow-hidden border-b">
       {/* Sidebar */}
-      <aside className="flex w-64 flex-col border-r">
-        <div className="p-4">
-          <Button variant="ghost" className="w-full justify-start gap-2">
+      <aside className="flex w-64 flex-shrink-0 flex-col border-r">
+        <div className="flex items-center justify-between p-4">
+          <Button variant="ghost" className="w-auto justify-start gap-2">
             <Menu className="h-5 w-5" />
           </Button>
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="icon">
+              <Search className="h-5 w-5 text-gray-500" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <Edit2 className="h-5 w-5 text-gray-500" />
+            </Button>
+          </div>
         </div>
 
         <nav className="flex-1 space-y-4 overflow-y-auto p-4">
@@ -53,23 +68,22 @@ export default function ChatInterface() {
           </div>
         </nav>
 
-        <div className="border-t p-4">
+        {/* <div className="border-t p-4">
           <Button variant="ghost" className="w-full justify-start gap-2">
             <div className="flex items-center gap-2">
               <div className="h-6 w-6 rounded-full bg-violet-600" />
               Upgrade plan
             </div>
           </Button>
-        </div>
+        </div> */}
       </aside>
 
       {/* Main Content */}
-      <main className="flex flex-1 flex-col">
+      <main className="flex min-w-0 flex-1 flex-col">
         {/* Top Bar */}
         <header className="flex items-center justify-between border-b p-4">
           <div className="flex items-center gap-2">
-            <Search className="h-5 w-5 text-gray-500" />
-            <span className="font-medium">ChatGPT</span>
+            <ModelSelector value={selectedModel} onChange={setSelectedModel} />
           </div>
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm">
@@ -82,7 +96,7 @@ export default function ChatInterface() {
         {/* Chat Content */}
         <div className="flex-1 space-y-6 overflow-y-auto p-4">
           <div className="space-y-4 rounded-lg bg-gray-50 p-4">
-            <pre className="text-sm">
+            <pre className="whitespace-pre-wrap break-words text-sm">
               &quot;15.1.0&quot; sec-fetch-dest: empty sec-fetch-mode: cors
               sec-fetch-site: same-origin user-agent: Mozilla/5.0 (Macintosh;
               Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)
@@ -131,11 +145,11 @@ export default function ChatInterface() {
 
         {/* Input Area */}
         <div className="border-t p-4">
-          <div className="mx-auto max-w-3xl">
+          <div className="mx-auto w-full max-w-3xl">
             <div className="relative">
               <input
                 type="text"
-                placeholder="Message ChatGPT"
+                placeholder="Message ChatBot"
                 className="w-full rounded-lg border p-4 pr-24 focus:outline-none focus:ring-2 focus:ring-violet-600"
               />
               <div className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-2">
@@ -153,7 +167,7 @@ export default function ChatInterface() {
             <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
               <div className="flex items-center gap-1">
                 <HelpCircle className="h-3 w-3" />
-                ChatGPT can make mistakes. Check important info.
+                ChatBot can make mistakes. Check important info.
               </div>
               <Button variant="ghost" size="sm">
                 <ArrowDown className="h-3 w-3" />
