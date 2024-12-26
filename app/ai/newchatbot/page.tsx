@@ -17,15 +17,42 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ModelSelector, models } from '@/components/ai/ModelSelector'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 export default function ChatInterface() {
   const [selectedModel, setSelectedModel] = useState(models[0].id)
+  const [sidebarWidth, setSidebarWidth] = useState(256) // 256px = 16rem = w-64
+  const isResizing = useRef(false)
+
+  const startResizing = (e: React.MouseEvent) => {
+    isResizing.current = true
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', stopResizing)
+  }
+
+  const stopResizing = () => {
+    isResizing.current = false
+    document.removeEventListener('mousemove', handleMouseMove)
+    document.removeEventListener('mouseup', stopResizing)
+  }
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isResizing.current) return
+
+    const newWidth = e.clientX
+    // Limit minimum and maximum width
+    if (newWidth >= 200 && newWidth <= 600) {
+      setSidebarWidth(newWidth)
+    }
+  }
 
   return (
-    <div className="flex h-screen overflow-hidden border-b">
+    <div className="fixed inset-0 flex">
       {/* Sidebar */}
-      <aside className="flex w-64 flex-shrink-0 flex-col border-r">
+      <aside
+        style={{ width: sidebarWidth }}
+        className="flex flex-shrink-0 flex-col border-r"
+      >
         <div className="flex items-center justify-between p-4">
           <Button variant="ghost" className="w-auto justify-start gap-2">
             <Menu className="h-5 w-5" />
@@ -77,6 +104,14 @@ export default function ChatInterface() {
           </Button>
         </div> */}
       </aside>
+
+      {/* Resize handle */}
+      <div
+        className="relative cursor-col-resize select-none"
+        onMouseDown={startResizing}
+      >
+        <div className="absolute inset-y-0 -left-1 w-2 transition-colors hover:bg-gray-200" />
+      </div>
 
       {/* Main Content */}
       <main className="flex min-w-0 flex-1 flex-col">

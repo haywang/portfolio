@@ -1,21 +1,21 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import GA from '@/components/GA'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 import { AuthProvider } from '@/contexts/AuthContext'
+import ClientLayout from './ClientLayout'
 
 export const metadata: Metadata = {
   title: 'Portfolio',
-  description: "Austin\'s portfolio website"
+  description: "Austin's portfolio website"
 }
 
 export default function RootLayout({
   children
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   const basePath = process.env.BASE_PATH || ''
+
   return (
     <html lang="en">
       <head>
@@ -39,11 +39,9 @@ export default function RootLayout({
         <link rel="manifest" href={`${basePath}/favicons/site.webmanifest`} />
         <GA />
       </head>
-      <body className={`antialiased`}>
+      <body className="antialiased">
         <AuthProvider>
-          <Header />
-          {children}
-          <Footer />
+          <ClientLayout>{children}</ClientLayout>
         </AuthProvider>
       </body>
     </html>
