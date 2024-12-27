@@ -101,6 +101,10 @@ export function ConversationSidebar({
             setEditingTitle={setEditingTitle}
             handleRename={handleRename}
             setEditingId={setEditingId}
+            editingPromptId={editingPromptId}
+            editingPrompt={editingPrompt}
+            setEditingPrompt={setEditingPrompt}
+            handlePromptSave={handlePromptSave}
           />
         ))}
       </div>
@@ -201,7 +205,11 @@ function ConversationItem({
   editingTitle,
   setEditingTitle,
   handleRename,
-  setEditingId
+  setEditingId,
+  editingPromptId,
+  editingPrompt,
+  setEditingPrompt,
+  handlePromptSave
 }: {
   conversation: Conversation
   isActive: boolean
@@ -214,65 +222,91 @@ function ConversationItem({
   setEditingTitle: (title: string) => void
   handleRename: (conversation: Conversation) => void
   setEditingId: (id: string | null) => void
+  editingPromptId: string | null
+  editingPrompt: string
+  setEditingPrompt: (prompt: string) => void
+  handlePromptSave: (conversation: Conversation) => void
 }) {
   return (
-    <div
-      className={cn(
-        'group flex items-center gap-2 rounded-lg p-2 hover:bg-muted',
-        isActive && 'bg-muted'
-      )}
-    >
-      <Button
-        variant="ghost"
-        className="flex-1 justify-start gap-2 truncate p-2"
-        onClick={() => onSelect(conversation)}
+    <div className="relative">
+      <div
+        className={cn(
+          'group flex items-center gap-2 rounded-lg p-2 hover:bg-muted',
+          isActive && 'bg-muted'
+        )}
       >
-        <MessageSquare className="h-4 w-4 shrink-0" />
-        {isEditing ? (
-          <Input
-            value={editingTitle}
-            onChange={(e) => setEditingTitle(e.target.value)}
-            onBlur={() => handleRename(conversation)}
+        <Button
+          variant="ghost"
+          className="flex-1 justify-start gap-2 truncate p-2"
+          onClick={() => onSelect(conversation)}
+        >
+          <MessageSquare className="h-4 w-4 shrink-0" />
+          {isEditing ? (
+            <Input
+              value={editingTitle}
+              onChange={(e) => setEditingTitle(e.target.value)}
+              onBlur={() => handleRename(conversation)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleRename(conversation)
+                } else if (e.key === 'Escape') {
+                  setEditingId(null)
+                }
+              }}
+              className="h-6 px-1"
+              autoFocus
+            />
+          ) : (
+            <span className="truncate">{conversation.title}</span>
+          )}
+        </Button>
+        <div className="hidden space-x-1 group-hover:flex">
+          <Button
+            onClick={() => onRename(conversation)}
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8"
+          >
+            <Edit2 className="h-4 w-4" />
+          </Button>
+          <Button
+            onClick={() => onDelete(conversation)}
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+          <Button
+            onClick={() => onPromptEdit(conversation)}
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8"
+          >
+            <MessageSquare className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+      {editingPromptId === conversation.id && (
+        <div className="absolute left-0 top-full z-10 w-full bg-background p-2 shadow-lg">
+          <Textarea
+            value={editingPrompt}
+            onChange={(e) => setEditingPrompt(e.target.value)}
+            onBlur={() => handlePromptSave(conversation)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleRename(conversation)
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault()
+                handlePromptSave(conversation)
               } else if (e.key === 'Escape') {
                 setEditingId(null)
               }
             }}
-            className="h-6 px-1"
+            className="min-h-[100px] w-full"
+            placeholder="Enter system prompt..."
             autoFocus
           />
-        ) : (
-          <span className="truncate">{conversation.title}</span>
-        )}
-      </Button>
-      <div className="hidden space-x-1 group-hover:flex">
-        <Button
-          onClick={() => onRename(conversation)}
-          size="icon"
-          variant="ghost"
-          className="h-8 w-8"
-        >
-          <Edit2 className="h-4 w-4" />
-        </Button>
-        <Button
-          onClick={() => onDelete(conversation)}
-          size="icon"
-          variant="ghost"
-          className="h-8 w-8"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
-        <Button
-          onClick={() => onPromptEdit(conversation)}
-          size="icon"
-          variant="ghost"
-          className="h-8 w-8"
-        >
-          <MessageSquare className="h-4 w-4" />
-        </Button>
-      </div>
+        </div>
+      )}
     </div>
   )
 }
