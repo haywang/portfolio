@@ -30,6 +30,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
+      // add callback, when user login. it set user and stop loading
       setUser(user)
       setLoading(false)
     })
@@ -56,6 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.log('Popup was closed by user')
         } else if (error.code === 'auth/popup-blocked') {
           // If popup is blocked, try redirect method instead
+          console.log('Popup is blocked')
         }
       }
       throw error

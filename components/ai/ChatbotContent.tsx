@@ -1,24 +1,11 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+// shadcn ui
 import { Button } from '../ui/button'
 import { Textarea } from '../ui/textarea'
 import { ScrollArea } from '../ui/scroll-area'
-import { useToast } from '@/hooks/use-toast'
-import { Loader2, Settings } from 'lucide-react'
-import { ChatMessage } from './ChatMessage'
-import { ModelSelector, models } from './ModelSelector'
 import { Toaster } from '../ui/toaster'
-import { useAuth } from '@/contexts/AuthContext'
-import {
-  createConversation,
-  updateConversation,
-  deleteConversation,
-  getConversations,
-  type Message,
-  type Conversation
-} from '@/lib/chat'
-import { ConversationSidebar } from './ConversationSidebar'
 import {
   Dialog,
   DialogContent,
@@ -28,6 +15,24 @@ import {
 } from '../ui/dialog'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
+// lucide ui
+import { Loader2, Settings } from 'lucide-react'
+// custom components
+import { ChatMessage } from './ChatMessage'
+import { ModelSelector, models } from './ModelSelector'
+import { ConversationSidebar } from './ConversationSidebar'
+// utils
+import { useAuth } from '@/contexts/AuthContext'
+import {
+  createConversation,
+  updateConversation,
+  deleteConversation,
+  getConversations,
+  type Message,
+  type Conversation
+} from '@/lib/chat'
+// Toast ui
+import { useToast } from '@/hooks/use-toast'
 
 export default function ChatbotPage() {
   const [conversations, setConversations] = useState<Conversation[]>([])
@@ -45,6 +50,7 @@ export default function ChatbotPage() {
     async function loadConversations() {
       if (user) {
         try {
+          // get conversations from firebase
           const loadedConversations = await getConversations(user.uid)
           setConversations(loadedConversations)
           if (loadedConversations.length > 0) {
@@ -69,10 +75,12 @@ export default function ChatbotPage() {
     try {
       const newConversation = await createConversation(
         user.uid,
-        models[0].id,
+        models[0].id, // Todo: Error, when create new conversation, it use the current select item, not the first item
         systemPrompt
       )
+      // add the new conversation to the start of Array
       setConversations((prev) => [newConversation, ...prev])
+      // set the current conversation to new conversation
       setCurrentConversation(newConversation)
     } catch (error) {
       toast({

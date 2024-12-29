@@ -19,6 +19,7 @@ export default function ProtectedRoute({
     }
   }, [user, loading, router])
 
+  // add loading
   if (loading) {
     return (
       <div className="flex min-h-[80vh] items-center justify-center">
@@ -27,9 +28,11 @@ export default function ProtectedRoute({
     )
   }
 
+  // when logout, redirect login page
   if (!user) {
     return null
   }
 
+  // when login, show normal page
   return <>{children}</>
 }
