@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Button } from '../ui/button'
 import { ScrollArea } from '../ui/scroll-area'
 import { Input } from '../ui/input'
-import { Plus, Edit2, Trash2, MessageSquare } from 'lucide-react'
+import { Plus, Edit2, Trash2, MessageSquare, Menu, Search } from 'lucide-react'
 import type { Conversation } from '@/lib/chat'
 import { cn } from '@/lib/utils'
 import { Textarea } from '../ui/textarea'
@@ -85,8 +85,10 @@ export function ConversationSidebar({
     if (conversations.length === 0) return null
 
     return (
+      // conversation item
       <div className="pt-4">
-        <div className="text-sm text-gray-500">{title}</div>
+        {/* title */}
+        <div className="text-sm">{title}</div>
         {conversations.map((conversation) => (
           <ConversationItem
             key={conversation.id}
@@ -138,12 +140,22 @@ export function ConversationSidebar({
   }
 
   return (
-    <div className="flex h-full w-64 flex-col border-r">
+    <div
+      style={{ width: 256 }}
+      className="flex flex-shrink-0 flex-col border-r"
+    >
       <div className="flex items-center justify-between p-4">
-        <h2 className="text-lg font-semibold">Conversations</h2>
-        <Button onClick={onNew} size="icon" variant="ghost">
-          <Plus className="h-4 w-4" />
+        <Button variant="ghost" className="w-auto justify-start gap-2">
+          <Menu className="h-5 w-5" />
         </Button>
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="icon">
+            <Search className="h-5 w-5 text-gray-500" />
+          </Button>
+          <Button variant="ghost" size="icon" onClick={onNew}>
+            <Plus className="h-5 w-5 text-gray-500" />
+          </Button>
+        </div>
       </div>
       <ScrollArea className="flex-1">
         <div className="space-y-2 p-2">
@@ -240,7 +252,6 @@ function ConversationItem({
           className="flex-1 justify-start gap-2 truncate p-2"
           onClick={() => onSelect(conversation)}
         >
-          <MessageSquare className="h-4 w-4 shrink-0" />
           {isEditing ? (
             <Input
               value={editingTitle}

@@ -298,7 +298,7 @@ export default function ChatbotPage() {
   }, [currentConversation?.id]) // Only trigger when conversation changes
 
   return (
-    <div className="flex h-[90vh]">
+    <div className="fixed inset-0 flex">
       <ConversationSidebar
         conversations={conversations}
         currentConversation={currentConversation || undefined}
@@ -310,8 +310,8 @@ export default function ChatbotPage() {
           handlePromptUpdate(conversation, newPrompt)
         }}
       />
-      <div className="flex flex-1 flex-col gap-4 p-4">
-        <div className="flex items-center justify-between">
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="flex items-center justify-between border-b p-4">
           <h1 className="text-2xl font-bold">
             {currentConversation?.title || 'New Chat'}
           </h1>
@@ -365,11 +365,11 @@ export default function ChatbotPage() {
               </DialogContent>
             </Dialog>
           </div>
-        </div>
+        </header>
 
         <ScrollArea
           ref={scrollAreaRef}
-          className="flex-1 rounded-lg border p-4"
+          className="flex-1 space-y-6 overflow-y-auto p-4"
         >
           <div className="space-y-4">
             {currentConversation?.messages.map((message, i) => (

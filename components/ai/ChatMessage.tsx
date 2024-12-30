@@ -15,12 +15,15 @@ export function ChatMessage({ message }: ChatMessageProps) {
         message.role === 'user' ? 'justify-end' : 'justify-start'
       )}
     >
+      {message.role === 'user' ? (
+        ''
+      ) : (
+        <div className="h-8 w-8 flex-shrink-0 rounded-full bg-gray-200" />
+      )}
       <div
         className={cn(
-          'max-w-[80%] rounded-lg px-4 py-2',
-          message.role === 'user'
-            ? 'bg-primary text-primary-foreground'
-            : 'bg-muted'
+          'space-y-4 rounded-lg p-4',
+          message.role === 'user' ? 'bg-gray-50' : ''
         )}
       >
         {message.content}
