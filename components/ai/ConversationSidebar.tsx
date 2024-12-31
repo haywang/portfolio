@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '../ui/dialog'
+import { Timestamp } from 'firebase/firestore'
 
 interface GroupedConversations {
   recent: Conversation[]
@@ -28,7 +29,14 @@ function groupConversationsByDate(
 ): GroupedConversations {
   return conversations.reduce(
     (groups, conversation) => {
-      const date = conversation.createdAt?.toDate() || new Date()
+      const date =
+        conversation.createdAt instanceof Timestamp
+          ? conversation.createdAt.toDate()
+          : new Date(Date.now())
+      // console.log('createdAt:', conversation.createdAt)
+      // console.log('Conversation ID:', conversation.id);
+      // console.log('Created At:', date);
+      // console.log('Is This Week:', isThisWeek(date));
 
       if (isThisWeek(date)) {
         groups.recent.push(conversation)
