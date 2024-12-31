@@ -11,8 +11,8 @@ export async function POST(req: Request) {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          'HTTP-Referer': process.env.SITE_URL || 'http://localhost:3000', // OpenRouter 要求
-          'X-Title': 'AI Chatbot' // 你的应用名称
+          'HTTP-Referer': process.env.SITE_URL || 'http://localhost:3000', // OpenRouter requested
+          'X-Title': 'AI Chatbot' // your app name
         },
         body: JSON.stringify({
           model: model,
@@ -38,14 +38,16 @@ export async function POST(req: Request) {
 
     // 添加响应数据的验证
     if (!data.choices || !data.choices.length) {
-      console.error('API return error: ', data.error)
+      const code = data?.error?.code || 500
       return NextResponse.json(
         {
-          error: 'API 返回了无效的响应格式',
-          code: 500,
+          error:
+            data?.error?.message ||
+            'The API returned an invalid response format',
+          code,
           data
         },
-        { status: 500 }
+        { status: code }
       )
     }
 
@@ -56,7 +58,10 @@ export async function POST(req: Request) {
     console.error('Chat error:', error)
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : '处理请求时发生错误',
+        error:
+          error instanceof Error
+            ? error.message
+            : 'An error occurred while processing the request.',
         code: 500
       },
       { status: 500 }
