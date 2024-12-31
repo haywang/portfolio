@@ -13,10 +13,17 @@ import {
   DialogTitle,
   DialogTrigger
 } from '../ui/dialog'
-import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 // lucide ui
-import { Loader2, Settings } from 'lucide-react'
+import {
+  Loader2,
+  Settings,
+  Mic,
+  Upload,
+  Globe,
+  HelpCircle,
+  ArrowDown
+} from 'lucide-react'
 // custom components
 import { ChatMessage } from './ChatMessage'
 import { ModelSelector, models } from './ModelSelector'
@@ -382,23 +389,45 @@ export default function ChatbotPage() {
             )}
           </div>
         </ScrollArea>
-
-        <form onSubmit={handleSubmit} className="flex gap-2">
-          <Textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type a message..."
-            className="min-h-[60px] flex-1"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault()
-                handleSubmit(e)
-              }
-            }}
-          />
-          <Button type="submit" disabled={isLoading || !currentConversation}>
+        <form onSubmit={handleSubmit} className="border-t p-4">
+          <div className="relative mx-auto w-full max-w-3xl">
+            <Textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Message ChatBot..."
+              className="min-h-[60px] flex-1"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault()
+                  handleSubmit(e)
+                }
+              }}
+            />
+            <div className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-2">
+              <Button variant="ghost" size="icon">
+                <Mic className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon">
+                <Upload className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon">
+                <Globe className="h-4 w-4" />
+              </Button>
+            </div>
+            {/* <Button type="submit" disabled={isLoading || !currentConversation}>
             Send
-          </Button>
+          </Button>             */}
+          </div>
+
+          <div className="mt-2 flex items-center justify-center text-xs text-gray-500">
+            <div className="flex items-center gap-1">
+              ChatBot can make mistakes. Check important info.
+            </div>
+            {/* <HelpCircle className="h-3 w-3" /> */}
+            {/* <Button variant="ghost" size="sm">
+                <ArrowDown className="h-3 w-3" />
+              </Button> */}
+          </div>
         </form>
       </div>
       <Toaster />
