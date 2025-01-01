@@ -1,5 +1,10 @@
 import Image from 'next/image'
 import { showcase } from '@/app/showcase'
+
+// function Site({ site, priority = false }) {
+//   console.log(site, priority)
+// }
+
 export default function Home() {
   const imageStyle = { color: '#ff0000' }
   const videoStyle = { opacity: '0', transition: 'opacity 0.5s linear' }
