@@ -1,14 +1,52 @@
 import Image from 'next/image'
 import { showcase } from '@/app/showcase'
 import clsx from 'clsx'
-// import { useRef } from 'react'
+import { useRef } from 'react'
 import Link from 'next/link'
 
 function Site({ site, priority = false }) {
-  // let videoContentRef = useRef()
-  // let videoRef = useRef()
+  const videoContentRef = useRef()
+  const videoRef = useRef()
+  const state = useRef('idle')
+
+  function forceLayout() {
+    void videoRef.current.offsetWidth
+  }
+
+  function showVideo() {
+    forceLayout()
+    videoContentRef.current.style.opacity = 1
+    videoContentRef.current.style.transition = ''
+  }
+
+  function hiddenVideo(durationSecond = 0.5) {
+    forceLayout()
+    videoContentRef.current.style.opacity = 0
+    videoContentRef.current.style.transition = `opacity ${durationSecond}s linear`
+  }
+
+  function onEnd() {
+    state.current = 'looping'
+    hiddenVideo()
+  }
+
+  function getVideo() {
+    return videoRef.current
+  }
+
   return (
-    <li className="dark:highlight-white/5 group relative rounded-3xl bg-slate-50 p-6 hover:bg-slate-100 dark:bg-slate-800/80 dark:hover:bg-slate-700/50">
+    <li
+      className="dark:highlight-white/5 group relative rounded-3xl bg-slate-50 p-6 hover:bg-slate-100 dark:bg-slate-800/80 dark:hover:bg-slate-700/50"
+      onMouseEnter={() => {
+        if (state.current === 'idle') {
+          state.current = 'playing'
+          getVideo().play()
+          showVideo()
+        } else if (state.current === 'leaving') {
+          state.current = 'looping'
+        }
+      }}
+    >
       <div className="relative aspect-[672/494] transform overflow-hidden rounded-md bg-slate-200 shadow-[0_2px_8px_rgba(15,23,42,0.08)] dark:bg-slate-700">
         <Image
           alt=""
@@ -20,9 +58,9 @@ function Site({ site, priority = false }) {
           priority={priority}
           unoptimized
         />
-        {/*  ref={videoContentRef} ref={videoRef}*/}
-        <div>
+        <div ref={videoContentRef}>
           <video
+            ref={videoRef}
             preload="none"
             muted
             playsInline
@@ -82,58 +120,8 @@ export default function Home() {
         </p>
       </div>
       <ul className="mx-auto mt-16 grid max-w-[26rem] grid-cols-1 gap-6 px-4 sm:mt-20 sm:max-w-[52.5rem] sm:grid-cols-2 sm:px-6 md:mt-32 lg:max-w-7xl lg:grid-cols-3 lg:gap-y-8 lg:px-8 xl:gap-x-8">
-        {showcase.map((site) => (
-          <li
-            className="dark:highlight-white/5 group relative rounded-3xl bg-slate-50 p-6 hover:bg-slate-100 dark:bg-slate-800/80 dark:hover:bg-slate-700/50"
-            key={site.name}
-          >
-            <div className="relative aspect-[672/494] transform overflow-hidden rounded-md bg-slate-200 shadow-[0_2px_8px_rgba(15,23,42,0.08)] dark:bg-slate-700">
-              <Image
-                alt=""
-                // fetchpriority="high"
-                width="672"
-                height="494"
-                decoding="async"
-                data-nimg="1"
-                className="absolute inset-0 h-full w-full"
-                src={site.thumbnail}
-                style={imageStyle}
-              />
-              <div style={videoStyle}>
-                {/* <video
-                  preload="none"
-                  playsInline
-                  className="absolute inset-0 h-full w-full [mask-image:radial-gradient(white,black)]"
-                >
-                  <source src={site.video} type="video/mp4" />
-                </video> */}
-              </div>
-            </div>
-            <div className="mt-6 flex flex-wrap items-center">
-              <h2 className="text-sm font-semibold leading-6 text-slate-900 group-hover:text-sky-500 dark:text-white dark:group-hover:text-sky-400">
-                <a href={site.slug}>
-                  <span className="absolute inset-0 rounded-3xl"></span>
-                  {site.name}
-                </a>
-              </h2>
-              <svg
-                className="h-6 w-6 flex-none opacity-0 group-hover:opacity-100"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <path
-                  d="M9.75 15.25L15.25 9.75M15.25 9.75H10.85M15.25 9.75V14.15"
-                  stroke="#0EA5E9"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                ></path>
-              </svg>
-              <p className="w-full flex-none text-[0.8125rem] leading-6 text-slate-500 dark:text-slate-400">
-                {site.description}
-              </p>
-            </div>
-          </li>
+        {showcase.map((site, index) => (
+          <Site key={site.name} site={site} priority={index < 6}></Site>
         ))}
       </ul>
     </main>
