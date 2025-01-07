@@ -22,9 +22,16 @@
     "paths": {
       "@/*": ["./*"],
       "@/app/ai/chatbot/*": ["./app/ai/chatbot/*"],
-      "@/components/*": ["./components/*"]
+      "@/components/*": ["./components/*"],
+      "@/videos/*": ["./videos/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "declarations.d.ts"
+  ],
   "exclude": ["node_modules"]
 }
