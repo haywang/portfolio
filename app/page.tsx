@@ -1,3 +1,4 @@
+'use client'
 import Image from 'next/image'
 import { showcase } from '@/app/showcase'
 import clsx from 'clsx'

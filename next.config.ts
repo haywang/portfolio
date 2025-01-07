@@ -10,6 +10,23 @@ const nextConfig: NextConfig = {
         pathname: '/_next/static/media/**'
       }
     ]
+  },
+  webpack(config, options) {
+    config.module.rules.push({
+      test: /\.mp4$/i,
+      issuer: /\.(jsx?|tsx?|mdx)$/,
+      use: [
+        {
+          loader: 'file-loader',
+          options: {
+            publicPath: '/_next',
+            name: 'static/media/[name].[sha1:hash].[ext]'
+          }
+        }
+      ]
+    })
+
+    return config
   }
 }
 
