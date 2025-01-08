@@ -6,12 +6,12 @@ import { useRef } from 'react'
 import Link from 'next/link'
 
 function Site({ site, priority = false }) {
-  const videoContentRef = useRef()
-  const videoRef = useRef()
+  const videoContentRef = useRef<HTMLDivElement | null>(null)
+  const videoRef = useRef<HTMLVideoElement | null>(null)
   const state = useRef('idle')
 
   function forceLayout() {
-    void videoRef.current.offsetWidth
+    void videoRef?.current?.offsetWidth
   }
 
   function showVideo() {
