@@ -26,7 +26,7 @@ function Site({ site, priority = false }) {
     videoContentRef.current.style.transition = `opacity ${durationSecond}s linear`
   }
 
-  function onEnd() {
+  function onEnded() {
     state.current = 'looping'
     hiddenVideo()
   }
@@ -39,6 +39,7 @@ function Site({ site, priority = false }) {
     <li
       className="dark:highlight-white/5 group relative rounded-3xl bg-slate-50 p-6 hover:bg-slate-100 dark:bg-slate-800/80 dark:hover:bg-slate-700/50"
       onMouseEnter={() => {
+        console.log(state)
         if (state.current === 'idle') {
           state.current = 'playing'
           getVideo().play()
@@ -46,6 +47,10 @@ function Site({ site, priority = false }) {
         } else if (state.current === 'leaving') {
           state.current = 'looping'
         }
+      }}
+      onMouseLeave={() => {
+        state.current = 'leaving'
+        hiddenVideo()
       }}
     >
       <div className="relative aspect-[672/494] transform overflow-hidden rounded-md bg-slate-200 shadow-[0_2px_8px_rgba(15,23,42,0.08)] dark:bg-slate-700">
@@ -59,7 +64,21 @@ function Site({ site, priority = false }) {
           priority={priority}
           unoptimized
         />
-        <div ref={videoContentRef}>
+        <div
+          ref={videoContentRef}
+          onTransitionEnd={() => {
+            if (state.current === 'leaving') {
+              state.current = 'idle'
+              getVideo().currentTime = 0
+              getVideo()?.pause()
+            } else if (state.current === 'looping') {
+              state.current = 'playing'
+              getVideo().currentTime = 0
+              getVideo()?.play()
+              showVideo()
+            }
+          }}
+        >
           <video
             ref={videoRef}
             preload="none"
@@ -69,6 +88,7 @@ function Site({ site, priority = false }) {
               'absolute inset-0 h-full w-full [mask-image:radial-gradient(white,black)]',
               site.dark && 'dark:hidden'
             )}
+            onEnded={onEnded}
           >
             <source src={site.video} type="video/mp4" />
           </video>
