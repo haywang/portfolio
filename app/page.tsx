@@ -6,8 +6,8 @@ import { useRef } from 'react'
 import Link from 'next/link'
 
 function Site({ site, priority = false }) {
-  const videoContentRef = useRef<HTMLDivElement | null>(null)
-  const videoRef = useRef<HTMLVideoElement | null>(null)
+  const videoContentRef = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const state = useRef('idle')
 
   function forceLayout() {
@@ -16,14 +16,18 @@ function Site({ site, priority = false }) {
 
   function showVideo() {
     forceLayout()
-    videoContentRef.current.style.opacity = 1
-    videoContentRef.current.style.transition = ''
+    if (videoContentRef.current) {
+      videoContentRef.current.style.opacity = '1'
+      videoContentRef.current.style.transition = ''
+    }
   }
 
   function hiddenVideo(durationSecond = 0.5) {
     forceLayout()
-    videoContentRef.current.style.opacity = 0
-    videoContentRef.current.style.transition = `opacity ${durationSecond}s linear`
+    if (videoContentRef.current) {
+      videoContentRef.current.style.opacity = '0'
+      videoContentRef.current.style.transition = `opacity ${durationSecond}s linear`
+    }
   }
 
   function onEnded() {
@@ -42,7 +46,7 @@ function Site({ site, priority = false }) {
         console.log(state)
         if (state.current === 'idle') {
           state.current = 'playing'
-          getVideo().play()
+          getVideo()?.play()
           showVideo()
         } else if (state.current === 'leaving') {
           state.current = 'looping'
@@ -67,15 +71,22 @@ function Site({ site, priority = false }) {
         <div
           ref={videoContentRef}
           onTransitionEnd={() => {
+            const video = getVideo()
             if (state.current === 'leaving') {
               state.current = 'idle'
-              getVideo().currentTime = 0
-              getVideo()?.pause()
+              const video = getVideo()
+              if (video) {
+                state.current = 'idle'
+                video.currentTime = 0
+                video.pause()
+              }
             } else if (state.current === 'looping') {
               state.current = 'playing'
-              getVideo().currentTime = 0
-              getVideo()?.play()
-              showVideo()
+              if (video) {
+                video.currentTime = 0
+                video.play()
+                showVideo()
+              }
             }
           }}
         >
