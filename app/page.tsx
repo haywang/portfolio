@@ -43,7 +43,7 @@ function Site({ site, priority = false }) {
     <li
       className="dark:highlight-white/5 group relative rounded-3xl bg-slate-50 p-6 hover:bg-slate-100 dark:bg-slate-800/80 dark:hover:bg-slate-700/50"
       onMouseEnter={() => {
-        console.log(state)
+        console.log('when mouse enter: the state is:', state)
         if (state.current === 'idle') {
           state.current = 'playing'
           getVideo()?.play()
@@ -51,6 +51,7 @@ function Site({ site, priority = false }) {
         } else if (state.current === 'leaving') {
           state.current = 'looping'
         }
+        console.log('change the state: the state is:', state)
       }}
       onMouseLeave={() => {
         state.current = 'leaving'
@@ -90,19 +91,23 @@ function Site({ site, priority = false }) {
             }
           }}
         >
-          <video
-            ref={videoRef}
-            preload="none"
-            muted
-            playsInline
-            className={clsx(
-              'absolute inset-0 h-full w-full [mask-image:radial-gradient(white,black)]',
-              site.dark && 'dark:hidden'
-            )}
-            onEnded={onEnded}
-          >
-            <source src={site.video} type="video/mp4" />
-          </video>
+          {site.video ? (
+            <video
+              ref={videoRef}
+              preload="none"
+              muted
+              playsInline
+              className={clsx(
+                'absolute inset-0 h-full w-full [mask-image:radial-gradient(white,black)]',
+                site.dark && 'dark:hidden'
+              )}
+              onEnded={onEnded}
+            >
+              <source src={site.video} type="video/mp4" />
+            </video>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
       <div className="mt-6 flex flex-wrap items-center">
