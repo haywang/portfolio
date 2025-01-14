@@ -4,3 +4,4 @@ This is my portfolio website, showcasing my front-end development skills, includ
 # Todos
 - [x] chatbot use new designer similar to ChatGPT
 - [ ] Figma to Code
+- [ ] upwork profile bold tool
