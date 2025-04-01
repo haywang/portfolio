@@ -9,7 +9,7 @@ export default function PlantShopLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="min-h-screen pb-[88px]">
+    <div className="min-h-screen">
       <Navbar />
       {children}
       <BottomTabs />
