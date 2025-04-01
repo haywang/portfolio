@@ -1,7 +1,10 @@
 export const CUSTOM_LAYOUT_ROUTES = [
   '/ai/newchatbot',
   '/ai/chatbot',
-  '/figma/plant-shop'
+  '/figma/plant-shop',
+  '/figma/plant-shop/favorites',
+  '/figma/plant-shop/cart',
+  '/figma/plant-shop/profile'
 ]
 
 export const shouldUseCustomLayout = (pathname: string) => {

@@ -1,0 +1,42 @@
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  z-index: 100;
+}
+
+.container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.tab:active {
+  transform: scale(0.95);
+}
+
+.icon {
+  filter: brightness(0) saturate(100%) invert(77%) sepia(5%) saturate(194%)
+    hue-rotate(181deg) brightness(87%) contrast(85%);
+  transition: filter 0.2s ease;
+}
+
+.active .icon {
+  filter: brightness(0) saturate(100%);
+}
