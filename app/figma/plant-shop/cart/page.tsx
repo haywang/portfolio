@@ -3,6 +3,7 @@
 import ProductImage from '@/components/plant-shop/ProductImage'
 import ProductInfo from '@/components/plant-shop/ProductInfo'
 import SizeSelector from '@/components/plant-shop/SizeSelector'
+import ProductDescription from '@/components/plant-shop/ProductDescription'
 
 export default function CartPage() {
   const sizes = [
@@ -32,6 +33,12 @@ export default function CartPage() {
 
       {/* 尺寸选择 */}
       <SizeSelector sizes={sizes} defaultSelected="10" className="mt-5 px-6" />
+
+      {/* 商品描述 */}
+      <ProductDescription
+        description="Prickly pear is a drought-resistant and hardy cactus that blooms with yellow-golden flowers in summer."
+        className="mt-5 px-6"
+      />
     </div>
   )
 }
