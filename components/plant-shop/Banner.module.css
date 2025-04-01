@@ -1,0 +1,68 @@
+.container {
+  padding: 0 24px;
+}
+
+.banner {
+  position: relative;
+  height: 100px;
+  border-radius: 16px;
+  padding: 16px;
+  background: linear-gradient(98.81deg, #e2e9ff -0.82%, #ffeaea 101.53%);
+  display: flex;
+  align-items: center;
+  /* overflow: hidden; */
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.429em;
+  color: #000000;
+  margin: 0;
+}
+
+.subtitle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.text {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.667em;
+  color: #808080;
+}
+
+.price {
+  background: #ffbb56;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.167em;
+  color: #ffffff;
+}
+
+.imageWrapper {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 140px;
+  height: 140px;
+}
+
+.image {
+  object-fit: contain;
+}
