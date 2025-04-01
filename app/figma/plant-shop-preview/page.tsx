@@ -26,7 +26,8 @@ export default function PlantShopPreviewPage() {
 
   // Different devices and colors
   const devices = [
-    { name: 'iPhone 16', color: '#1A1A1A', batteryLevel: 92 }
+    // { name: 'iPhone 13', color: '#1A1A1A', batteryLevel: 92 },
+    { name: 'iPhone 16', color: '#2C2C2C', batteryLevel: 88 }
     // { name: 'iPhone 13 Pro', color: '#4E5851', batteryLevel: 76 },
     // { name: 'iPhone SE', color: '#E7ECEE', batteryLevel: 54 }
   ]
@@ -56,7 +57,7 @@ export default function PlantShopPreviewPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-2">
         {devices.map((device) => (
           <IPhonePreview
             key={device.name}
