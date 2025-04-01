@@ -1,0 +1,42 @@
+.container {
+  margin: 28px 0;
+  padding: 0 24px;
+  overflow: hidden;
+}
+
+.tabList {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  padding-bottom: 4px; /* 为了显示阴影 */
+}
+
+.tabList::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px 9px;
+  border-radius: 10px;
+  background-color: rgba(244, 244, 244, 0.5);
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1.219em;
+  color: #505050;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab.active {
+  background-color: #d3b398;
+  color: #ffffff;
+}
