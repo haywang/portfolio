@@ -1,0 +1,107 @@
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+}
+
+.card {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+
+.imageContainer {
+  position: relative;
+  width: 97px;
+  height: 88px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.productImage {
+  object-fit: cover;
+  transform: scale(1.2) translateY(-8%);
+  transform-origin: center;
+}
+
+.likeButton {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.likeButton:active {
+  transform: scale(0.95);
+}
+
+.liked {
+  filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(309deg)
+    brightness(119%) contrast(119%);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.name {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.333em;
+  color: #000000;
+  margin: 0;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ratingNumber {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1.667em;
+  color: #ffbb56;
+}
+
+.size {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.333em;
+  color: rgba(0, 0, 0, 0.5);
+  margin: 0;
+}
+
+.price {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1.231em;
+  color: #000000;
+  margin: 0;
+}

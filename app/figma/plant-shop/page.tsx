@@ -1,4 +1,10 @@
+'use client'
+
 import Navbar from '@/components/plant-shop/Navbar'
+import Title from '@/components/plant-shop/Title'
+import TabList from '@/components/plant-shop/TabList'
+import Filter from '@/components/plant-shop/Filter'
+import ProductList from '@/components/plant-shop/ProductList'
 
 // 基本使用
 {
@@ -15,9 +21,21 @@ import Navbar from '@/components/plant-shop/Navbar'
 }
 
 export default function PlantShop() {
+  const handleTabChange = (tabId: string) => {
+    console.log('Selected tab:', tabId)
+  }
+
+  const handleFilterChange = (filterId: string) => {
+    console.log('Selected filter:', filterId)
+  }
+
   return (
     <>
       <Navbar />
+      <Title />
+      <TabList onTabChange={handleTabChange} />
+      <Filter onFilterChange={handleFilterChange} />
+      <ProductList />
     </>
   )
 }
