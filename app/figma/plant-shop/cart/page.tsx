@@ -1,6 +1,7 @@
 'use client'
 
 import ProductImage from '@/components/plant-shop/ProductImage'
+import ProductInfo from '@/components/plant-shop/ProductInfo'
 
 export default function CartPage() {
   return (
@@ -12,6 +13,14 @@ export default function CartPage() {
           alt="Prickly Pear"
         />
       </div>
+
+      {/* 商品名称、价格和评分 - 严格按照设计稿实现 */}
+      <ProductInfo
+        name="Prickly Pear"
+        price={20}
+        rating={4.8}
+        className="mt-7"
+      />
     </div>
   )
 }
