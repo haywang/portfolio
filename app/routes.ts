@@ -4,7 +4,8 @@ export const CUSTOM_LAYOUT_ROUTES = [
   '/figma/plant-shop',
   '/figma/plant-shop/favorites',
   '/figma/plant-shop/cart',
-  '/figma/plant-shop/profile'
+  '/figma/plant-shop/profile',
+  '/figma/plant-shop-preview'
 ]
 
 export const shouldUseCustomLayout = (pathname: string) => {
