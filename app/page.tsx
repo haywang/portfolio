@@ -58,7 +58,7 @@ function Site({ site, priority = false }) {
         hiddenVideo()
       }}
     >
-      <div className="relative aspect-[672/494] transform overflow-hidden rounded-md bg-slate-200 shadow-[0_2px_8px_rgba(15,23,42,0.08)] dark:bg-slate-700">
+      <div className="relative aspect-[823/494] transform overflow-hidden rounded-md bg-slate-200 shadow-[0_2px_8px_rgba(15,23,42,0.08)] dark:bg-slate-700">
         <Image
           alt=""
           className={clsx(

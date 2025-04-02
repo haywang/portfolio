@@ -1,5 +1,13 @@
 export const showcase = [
   {
+    name: 'Plant Shop',
+    slug: '/figma/plant-shop-preview',
+    thumbnail: require('@/images/showcase/thumbnails/plant-shop.png').default,
+    // video: '/videos/chatbot.mp4',
+    description:
+      'A plants e-commerce app. There are screens for viewing the different plants and also viewing different sizes of a selected plant.'
+  },
+  {
     name: 'ChatBot',
     slug: 'ai/chatbot',
     thumbnail: require('@/images/showcase/thumbnails/chatbot.png').default,
