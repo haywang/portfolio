@@ -26,7 +26,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-94px)] flex-col pb-8">
+    <div className="flex flex-col pb-12">
       <div className="flex-1">
         {/* 商品图片展示 */}
         <div className="w-full">

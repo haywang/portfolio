@@ -30,7 +30,7 @@ export default function PlantShop() {
   }
 
   return (
-    <div>
+    <div className="pb-12">
       <Title />
       <TabList />
       <Filter />
