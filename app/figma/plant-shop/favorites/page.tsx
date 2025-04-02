@@ -26,9 +26,11 @@ export default function FavoritesPage() {
   }
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold">My Favorites</h1>
-      {/* Add your favorites list content here */}
+    <div className="flex flex-col pb-12">
+      <div className="p-4">
+        <h1 className="text-2xl font-bold">My Favorites</h1>
+        {/* Add your favorites list content here */}
+      </div>
     </div>
   )
 }

@@ -1,57 +1,53 @@
 'use client'
 
-import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import styles from './Navbar.module.css'
+import { usePathname } from 'next/navigation'
+import { ChevronLeft, Filter } from 'lucide-react'
 
 interface NavbarProps {
-  title?: string
   showBackButton?: boolean
-  showFilterIcon?: boolean
   onFilterClick?: () => void
 }
 
 export default function Navbar({
-  title = 'All plants',
   showBackButton = true,
-  showFilterIcon = true,
   onFilterClick
 }: NavbarProps) {
-  const router = useRouter()
+  const pathname = usePathname()
+
+  // Get page title based on current path
+  const getPageTitle = () => {
+    switch (pathname) {
+      case '/figma/plant-shop':
+        return 'All Plants'
+      case '/figma/plant-shop/cart':
+        return 'Cart'
+      case '/figma/plant-shop/favorites':
+        return 'Favorites'
+      case '/figma/plant-shop/profile':
+        return 'Profile'
+      default:
+        return 'All Plants'
+    }
+  }
 
   return (
-    <nav className={styles.navbar}>
+    <div className="sticky top-0 z-50 flex h-16 items-center justify-between bg-white px-4">
       {showBackButton && (
-        <button
-          className={styles.backButton}
-          onClick={() => router.back()}
-          aria-label="Go back"
-        >
-          <Image
-            src="/images/plant-shop/back-icon.svg"
-            alt="Back"
-            width={20}
-            height={18}
-          />
+        <button className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-100">
+          <ChevronLeft className="h-6 w-6" />
         </button>
       )}
-
-      <h1 className={styles.title}>{title}</h1>
-
-      {showFilterIcon && (
+      <h1 className="absolute left-1/2 -translate-x-1/2 text-xl font-semibold">
+        {getPageTitle()}
+      </h1>
+      {onFilterClick && (
         <button
-          className={styles.filterButton}
           onClick={onFilterClick}
-          aria-label="Filter"
+          className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-100"
         >
-          <Image
-            src="/images/plant-shop/filter-icon.svg"
-            alt="Filter"
-            width={20}
-            height={20}
-          />
+          <Filter className="h-6 w-6" />
         </button>
       )}
-    </nav>
+    </div>
   )
 }

@@ -28,7 +28,7 @@ export default function CartPage() {
   return (
     <div className="flex flex-col pb-12">
       <div className="flex-1">
-        {/* 商品图片展示 */}
+        {/* Product Image */}
         <div className="w-full">
           <ProductImage
             src="/images/plant-shop/prickly-pear.png"
@@ -36,7 +36,7 @@ export default function CartPage() {
           />
         </div>
 
-        {/* 商品名称、价格和评分 */}
+        {/* Product Name, Price and Rating */}
         <ProductInfo
           name="Prickly Pear"
           price={20}
@@ -44,21 +44,21 @@ export default function CartPage() {
           className="mt-7"
         />
 
-        {/* 尺寸选择 */}
+        {/* Size Selection */}
         <SizeSelector
           sizes={sizes}
           defaultSelected="10"
           className="mt-5 px-6"
         />
 
-        {/* 商品描述 */}
+        {/* Product Description */}
         <ProductDescription
           description="Prickly pear is a drought-resistant and hardy cactus that blooms with yellow-golden flowers in summer."
           className="mt-5 px-6"
         />
       </div>
 
-      {/* 底部添加购物车控件 */}
+      {/* Bottom Cart Controls */}
       <CartControls
         onAddToCart={handleAddToCart}
         onToggleFavorite={handleToggleFavorite}
