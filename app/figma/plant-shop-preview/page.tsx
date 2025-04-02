@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import IPhonePreview from '@/components/ui/IPhonePreview'
 
-export default function PlantShopPreviewPage() {
+// 创建一个内部组件来处理搜索参数
+function PreviewContent() {
   const searchParams = useSearchParams()
   const [selectedPage, setSelectedPage] = useState('/figma/plant-shop')
 
@@ -33,11 +34,7 @@ export default function PlantShopPreviewPage() {
   ]
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="mb-8 text-center text-3xl font-bold">
-        Plant Shop Mobile App Preview
-      </h1>
-
+    <>
       <div className="mb-8">
         <h2 className="mb-4 text-xl font-semibold">Select Page</h2>
         <div className="flex flex-wrap gap-3">
@@ -73,6 +70,19 @@ export default function PlantShopPreviewPage() {
           </IPhonePreview>
         ))}
       </div>
+    </>
+  )
+}
+
+export default function PlantShopPreviewPage() {
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="mb-8 text-center text-3xl font-bold">
+        Plant Shop Mobile App Preview
+      </h1>
+      <Suspense fallback={<div>Loading...</div>}>
+        <PreviewContent />
+      </Suspense>
     </div>
   )
 }
