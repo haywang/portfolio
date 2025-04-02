@@ -37,7 +37,7 @@ const products: Product[] = [
   {
     id: '3',
     name: 'Sansevieria',
-    image: '/images/plant-shop/Sansevieria.jpg',
+    image: '/images/plant-shop/sansevieria.jpg',
     backgroundColor: '#EBF4EE',
     rating: 4.5,
     size: 'From 8 Inch',
