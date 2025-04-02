@@ -108,7 +108,7 @@ export default function IPhonePreview({
         {/* 动态岛 */}
         {hasDynamicIsland && (
           <div
-            className="absolute left-1/2 top-2 z-10 -translate-x-1/2 rounded-full bg-black"
+            className="absolute left-1/2 top-2 z-20 -translate-x-1/2 rounded-full bg-black"
             style={{
               width: `${deviceConfig.notchWidth}px`,
               height: `${deviceConfig.notchHeight}px`
@@ -117,7 +117,7 @@ export default function IPhonePreview({
         )}
 
         {/* 状态栏 - 使用固定高度和背景色 */}
-        <div className="absolute left-0 right-0 top-0 z-10 flex h-10 items-center justify-between bg-white px-6 text-xs text-black">
+        <div className="absolute left-0 right-0 top-1 z-10 flex h-10 items-center justify-between bg-white px-6 text-xs text-black">
           <span>{formattedTime}</span>
           <div className="flex items-center space-x-2">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="black">
