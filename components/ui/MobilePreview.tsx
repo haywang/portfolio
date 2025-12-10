@@ -30,7 +30,7 @@ export default function MobilePreview({
         }}
       >
         {/* 顶部刘海 */}
-        <div className="absolute left-1/2 top-0 h-6 w-40 -translate-x-1/2 rounded-b-xl bg-black"></div>
+        <div className="absolute top-0 left-1/2 h-6 w-40 -translate-x-1/2 rounded-b-xl bg-black"></div>
 
         {/* 内容区域 */}
         <div className="h-full w-full overflow-auto">{children}</div>

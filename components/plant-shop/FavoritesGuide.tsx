@@ -9,10 +9,10 @@ export default function FavoritesGuide() {
   return (
     <div className="relative flex h-full min-h-[calc(100vh-94px)] w-full overflow-hidden bg-[#D3B398]">
       {/* Background ellipse */}
-      <div className="bg-gradient-radial absolute left-1/2 top-1/4 h-[463px] w-[463px] -translate-x-1/2 -translate-y-1/2 rounded-full from-white/100 to-white/0" />
+      <div className="bg-gradient-radial absolute top-1/4 left-1/2 h-[463px] w-[463px] -translate-x-1/2 -translate-y-1/2 rounded-full from-white/100 to-white/0" />
 
       {/* Woman image */}
-      <div className="absolute left-1/2 top-[283px] flex h-[463px] -translate-x-1/2 -translate-y-1/2 items-center justify-center">
+      <div className="absolute top-[283px] left-1/2 flex h-[463px] -translate-x-1/2 -translate-y-1/2 items-center justify-center">
         <Image
           src="/images/plant-shop/woman-favorites.png"
           alt="Woman with plants"
@@ -28,7 +28,7 @@ export default function FavoritesGuide() {
       </div>
 
       {/* Story indicators */}
-      <div className="absolute left-4 right-4 top-4 flex gap-2">
+      <div className="absolute top-4 right-4 left-4 flex gap-2">
         <div className="h-1 flex-1 rounded-full bg-white/60">
           <div className="h-full w-full rounded-full bg-white" />
         </div>
@@ -40,7 +40,7 @@ export default function FavoritesGuide() {
       {/* Close button */}
       <button
         onClick={() => router.back()}
-        className="absolute right-4 top-8 flex h-6 w-6 items-center justify-center rounded-full bg-white"
+        className="absolute top-8 right-4 flex h-6 w-6 items-center justify-center rounded-full bg-white"
       >
         <svg
           width="14"
@@ -55,11 +55,11 @@ export default function FavoritesGuide() {
       </button>
 
       {/* Bottom section */}
-      <div className="absolute bottom-0 left-0 right-0">
+      <div className="absolute right-0 bottom-0 left-0">
         {/* Bottom curve with content */}
         <div className="relative">
           {/* Text content - positioned above the curve */}
-          <div className="absolute bottom-24 left-0 right-0 z-10 px-4 text-center">
+          <div className="absolute right-0 bottom-24 left-0 z-10 px-4 text-center">
             <h1 className="text-2xl font-bold text-black">
               Add a flower
               <br />
@@ -81,7 +81,7 @@ export default function FavoritesGuide() {
           />
 
           {/* Heart button */}
-          <button className="absolute left-1/2 top-0 flex h-[86px] w-[86px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-white shadow-lg transition-transform hover:scale-105 active:scale-95">
+          <button className="absolute top-0 left-1/2 flex h-[86px] w-[86px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-white shadow-lg transition-transform hover:scale-105 active:scale-95">
             <svg
               width="36"
               height="36"

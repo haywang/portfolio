@@ -19,7 +19,7 @@ export default function ProductDescription({
       </h3>
 
       {/* 描述文本 - 使用Montserrat字体，字重500，13px，行高1.4，半透明黑色 */}
-      <p className="font-montserrat text-[13px] font-medium leading-[1.4] text-black/50">
+      <p className="font-montserrat text-[13px] leading-[1.4] font-medium text-black/50">
         {description}
       </p>
     </div>

@@ -20,24 +20,24 @@ export function ProjectCard({
     <Link
       href={available ? href : '#'}
       className={cn(
-        'group relative rounded-lg border p-6 hover:bg-muted',
+        'group hover:bg-muted relative rounded-lg border p-6',
         !available && 'pointer-events-none opacity-60'
       )}
     >
       <div className="flex items-center gap-4">
-        <div className="h-12 w-12 rounded-full bg-primary/10 p-2.5 text-primary">
+        <div className="bg-primary/10 text-primary h-12 w-12 rounded-full p-2.5">
           {icon}
         </div>
         <div>
           <h3 className="font-semibold">
             {title}
             {!available && (
-              <span className="ml-2 text-xs text-muted-foreground">
+              <span className="text-muted-foreground ml-2 text-xs">
                 (Coming Soon)
               </span>
             )}
           </h3>
-          <p className="text-sm text-muted-foreground">{description}</p>
+          <p className="text-muted-foreground text-sm">{description}</p>
         </div>
       </div>
     </Link>

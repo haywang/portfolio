@@ -39,7 +39,7 @@ export default function AI() {
     <div className="container mx-auto max-w-5xl py-8">
       <div className="mb-8 text-center">
         <h1 className="text-4xl font-bold">AI Applications</h1>
-        <p className="mt-2 text-muted-foreground">
+        <p className="text-muted-foreground mt-2">
           Explore our collection of AI-powered tools and applications
         </p>
       </div>

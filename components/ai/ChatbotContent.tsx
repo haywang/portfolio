@@ -403,7 +403,7 @@ export default function ChatbotPage() {
                 }
               }}
             />
-            <div className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-2">
+            <div className="absolute top-1/2 right-2 flex -translate-y-1/2 items-center gap-2">
               <Button variant="ghost" size="icon">
                 <Mic className="h-4 w-4" />
               </Button>

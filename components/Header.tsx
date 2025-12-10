@@ -24,9 +24,9 @@ export default function Header() {
 
   return (
     <>
-      <div className="w-full flex-none bg-white/95 backdrop-blur transition-colors duration-500 dark:border-slate-50/[0.06] dark:bg-transparent lg:border-b lg:border-slate-900/10">
+      <div className="w-full flex-none bg-white/95 backdrop-blur transition-colors duration-500 lg:border-b lg:border-slate-900/10 dark:border-slate-50/[0.06] dark:bg-transparent">
         <div className="max-w-8xl mx-auto">
-          <div className="border-b border-slate-900/10 px-4 py-4 dark:border-slate-300/10 lg:border-0 lg:px-8">
+          <div className="border-b border-slate-900/10 px-4 py-4 lg:border-0 lg:px-8 dark:border-slate-300/10">
             <div className="relative flex items-center justify-between">
               <Link href="/">
                 <Image
@@ -43,13 +43,12 @@ export default function Header() {
                 <NavigationMenuList>
                   {menuItems.map((item) => (
                     <NavigationMenuItem key={item.href}>
-                      <Link href={item.href} legacyBehavior passHref>
-                        <NavigationMenuLink
-                          className={navigationMenuTriggerStyle()}
-                        >
-                          {item.label}
-                        </NavigationMenuLink>
-                      </Link>
+                      <NavigationMenuLink
+                        asChild
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        <Link href={item.href}>{item.label}</Link>
+                      </NavigationMenuLink>
                     </NavigationMenuItem>
                   ))}
                   {user && (

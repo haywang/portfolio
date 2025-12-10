@@ -131,7 +131,7 @@ export default function ChatInterface() {
         {/* Chat Content */}
         <div className="flex-1 space-y-6 overflow-y-auto p-4">
           <div className="space-y-4 rounded-lg bg-gray-50 p-4">
-            <pre className="whitespace-pre-wrap break-words text-sm">
+            <pre className="text-sm break-words whitespace-pre-wrap">
               &quot;15.1.0&quot; sec-fetch-dest: empty sec-fetch-mode: cors
               sec-fetch-site: same-origin user-agent: Mozilla/5.0 (Macintosh;
               Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)
@@ -185,9 +185,9 @@ export default function ChatInterface() {
               <input
                 type="text"
                 placeholder="Message ChatBot"
-                className="w-full rounded-lg border p-4 pr-24 focus:outline-none focus:ring-2 focus:ring-violet-600"
+                className="w-full rounded-lg border p-4 pr-24 focus:ring-2 focus:ring-violet-600 focus:outline-none"
               />
-              <div className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-2">
+              <div className="absolute top-1/2 right-2 flex -translate-y-1/2 items-center gap-2">
                 <Button variant="ghost" size="icon">
                   <Mic className="h-4 w-4" />
                 </Button>

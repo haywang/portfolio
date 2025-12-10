@@ -111,7 +111,7 @@ function Site({ site, priority = false }) {
         </div>
       </div>
       <div className="mt-6 flex flex-wrap items-center">
-        <h2 className="text-sm font-semibold leading-6 text-slate-900 group-hover:text-sky-500 dark:text-white dark:group-hover:text-sky-400">
+        <h2 className="text-sm leading-6 font-semibold text-slate-900 group-hover:text-sky-500 dark:text-white dark:group-hover:text-sky-400">
           <Link href={site.slug}>
             <span className="absolute inset-0 rounded-3xl"></span>
             {site.name}
@@ -144,10 +144,10 @@ export default function Home() {
   return (
     <main className="relative mt-16 sm:mt-20">
       <div className="relative mx-auto max-w-3xl px-4 sm:px-6 sm:text-center lg:px-8">
-        <h1 className="text-[2.5rem] font-semibold leading-6 text-sky-500">
+        <h1 className="text-[2.5rem] leading-6 font-semibold text-sky-500">
           Showcase
         </h1>
-        <p className="mt-6 text-2xl font-bold leading-none tracking-tight text-slate-900 dark:text-white">
+        <p className="mt-6 text-2xl leading-none font-bold tracking-tight text-slate-900 dark:text-white">
           React | Next.js | Tailwind CSS | Shadcn UI | OpenRouter
         </p>
         <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">

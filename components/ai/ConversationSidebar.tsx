@@ -251,7 +251,7 @@ function ConversationItem({
     <div className="relative">
       <div
         className={cn(
-          'group flex items-center gap-2 rounded-lg p-2 hover:bg-muted',
+          'group hover:bg-muted flex items-center gap-2 rounded-lg p-2',
           isActive && 'bg-muted'
         )}
       >
@@ -307,7 +307,7 @@ function ConversationItem({
         </div>
       </div>
       {editingPromptId === conversation.id && (
-        <div className="absolute left-0 top-full z-10 w-full bg-background p-2 shadow-lg">
+        <div className="bg-background absolute top-full left-0 z-10 w-full p-2 shadow-lg">
           <Textarea
             value={editingPrompt}
             onChange={(e) => setEditingPrompt(e.target.value)}
